@@ -3,7 +3,7 @@ package com.ggurgul.playground.extracker.service.domain.repository
 import com.ggurgul.playground.extracker.service.domain.Expense
 import com.ggurgul.playground.extracker.service.domain.ExpenseId
 import org.springframework.data.repository.PagingAndSortingRepository
-import org.springframework.stereotype.Repository
+import org.springframework.data.rest.core.annotation.RepositoryRestResource
 
-@Repository
+@RepositoryRestResource
 interface ExpensesRepository : PagingAndSortingRepository<Expense, ExpenseId>

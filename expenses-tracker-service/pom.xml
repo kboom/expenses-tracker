@@ -322,7 +322,7 @@
                 <configuration>
                     <skipTests>${skip.tests.unit}</skipTests>
                     <excludedGroups>com.toptal.ggurgul.timezones.integration.IntegrationTest</excludedGroups>
-                    <excludedGroups>com.toptal.ggurgul.timezones.functional.FunctionalTest</excludedGroups>
+                    <excludedGroups>com.ggurgul.playground.extracker.service.FunctionalTest</excludedGroups>
                 </configuration>
                 <executions>
                     <execution>
@@ -356,7 +356,7 @@
                             <includes>
                                 <include>UsersTests.java</include>
                             </includes>
-                            <!--<groups>com.toptal.ggurgul.timezones.functional.FunctionalTest</groups>-->
+                            <!--<groups>com.ggurgul.playground.extracker.service.FunctionalTest</groups>-->
                             <summaryFile>target/failsafe-reports/functional-tests.xml</summaryFile>
                         </configuration>
                     </execution>

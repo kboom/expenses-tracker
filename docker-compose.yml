@@ -17,7 +17,7 @@ services:
     image: ggurgul/expenses-tracker/expenses-tracker-service
     container_name: expenses-tracker-service
     ports:
-      - 9998:80
+      - 9998:
     networks:
       backnet:
         ipv4_address: 172.100.1.40

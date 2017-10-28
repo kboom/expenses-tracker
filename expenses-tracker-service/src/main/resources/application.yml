@@ -2,6 +2,19 @@ server:
   port: 80
   contextPath: /api
 
+spring:
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+
+  datasource:
+      url: jdbc:postgresql://0.0.0.0:5432/test
+      username: test
+      password: test
+      driver-class-name: org.postgresql.Driver
+
 services:
   auth:
     baseUrl: http://localhost:9998
@@ -23,6 +36,10 @@ logging:
 ---
 spring:
   profiles: dev
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
 server:
   port: 9999
 logging:
