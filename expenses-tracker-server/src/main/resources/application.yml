@@ -1,0 +1,55 @@
+server:
+  contextPath: /api
+
+jwt:
+  header: Authorization
+  secret: s3cret
+  expiration: 604800
+
+spring:
+
+  mail:
+    properties:
+      mail:
+        smtp:
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+
+  datasource:
+      url: jdbc:postgresql://0.0.0.0:5432/test
+      username: test
+      password: test
+      driver-class-name: org.postgresql.Driver
+
+logging:
+  level:
+    org.springframework:
+      security: DEBUG
+
+mail:
+  host: 0.0.0.0
+  account:
+    username: noreply@timezones.com
+    password: test
+
+registration:
+  confirmation:
+    link: http://localhost:3000/#/register?confirmation=##code##
+  email:
+    from: noreply@timezones.com
+    subject: Your registration link at TimezonesApp
+
+user:
+  password:
+    reset:
+      email:
+        link: http://localhost:3000/#/reset-password?resetcode=##code##
+        from: noreply@timezones.com
+        subject: Reset your password at TimezonesApp

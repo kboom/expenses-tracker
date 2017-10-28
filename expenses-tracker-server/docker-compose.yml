@@ -1,0 +1,67 @@
+version: "3"
+
+services:
+
+  server:
+    image: kbhit/project:1.0-SNAPSHOT
+    ports:
+      - 8080:8080
+    networks:
+      backnet:
+        ipv4_address: 172.100.1.2
+    depends_on:
+      - database
+      - mailserver
+    command: --spring.datasource.url=jdbc:postgresql://172.100.1.3:5432/test --mail.host=172.100.1.4
+
+  database:
+    image: postgres:9.4
+    ports:
+      - 5432:5432
+    networks:
+      backnet:
+        ipv4_address: 172.100.1.3
+    environment:
+      POSTGRES_DB: test
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+
+  mailserver:
+    image: tvial/docker-mailserver:latest
+    hostname: mail
+    domainname: domain.com
+    networks:
+      backnet:
+        ipv4_address: 172.100.1.4
+    ports:
+    - "25:25"
+    - "143:143"
+    - "587:587"
+    - "993:993"
+    volumes:
+    - maildata:/var/mail
+    - mailstate:/var/mail-state
+    - ./config/:/tmp/docker-mailserver/
+    environment:
+    - MAIL_USER=test
+    - MAIL_PASS=test
+    - ENABLE_SPAMASSASSIN=1
+    - ENABLE_CLAMAV=1
+    - ENABLE_FAIL2BAN=1
+    - ENABLE_POSTGREY=1
+    - ONE_DIR=1
+    - DMS_DEBUG=0
+    cap_add:
+    - NET_ADMIN
+
+volumes:
+  maildata:
+    driver: local
+  mailstate:
+    driver: local
+
+networks:
+  backnet:
+    ipam:
+      config:
+        - subnet: 172.100.1.0/24
