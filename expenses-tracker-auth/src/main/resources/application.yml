@@ -1,8 +1,11 @@
+server:
+  port: 9998
+
 security:
   oauth2:
     client:
-      client-id: acme
-      client-secret: acmesecret
+      client-id: expenses-tracker-service
+      client-secret: j982hsf#sjfjvoln3r3ofhslfnsofhbbOO
       scope: read,write
       auto-approve-scopes: '.*'
 

@@ -1,55 +1,17 @@
 server:
   contextPath: /api
+  port: 9999
 
-jwt:
-  header: Authorization
-  secret: s3cret
-  expiration: 604800
+services:
+  auth:
+    baseUrl: http://localhost:9998
 
-spring:
-
-  mail:
-    properties:
-      mail:
-        smtp:
-          connectiontimeout: 5000
-          timeout: 3000
-          writetimeout: 5000
-
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
-    show-sql: true
-    hibernate:
-      ddl-auto: create-drop
-
-  datasource:
-      url: jdbc:postgresql://0.0.0.0:5432/test
-      username: test
-      password: test
-      driver-class-name: org.postgresql.Driver
-
-logging:
-  level:
-    org.springframework:
-      security: DEBUG
-
-mail:
-  host: 0.0.0.0
-  account:
-    username: noreply@timezones.com
-    password: test
-
-registration:
-  confirmation:
-    link: http://localhost:3000/#/register?confirmation=##code##
-  email:
-    from: noreply@timezones.com
-    subject: Your registration link at TimezonesApp
-
-user:
-  password:
-    reset:
-      email:
-        link: http://localhost:3000/#/reset-password?resetcode=##code##
-        from: noreply@timezones.com
-        subject: Reset your password at TimezonesApp
+security:
+  oauth2:
+    client:
+      client-id: expenses-tracker-service
+      client-secret: j982hsf#sjfjvoln3r3ofhslfnsofhbbOO
+      access-token-uri: ${services.auth.baseUrl}/oauth/token
+      user-authorization-uri: ${services.auth.baseUrl}/oauth/authorize
+    resource:
+      user-info-uri: ${services.auth.baseUrl}/me
