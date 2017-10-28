@@ -11,7 +11,7 @@ import java.security.Principal
 @SpringBootApplication
 @EnableOAuth2Sso
 @RestController
-class TimezonesApplication {
+class ExpensesTrackerApplication {
 
     @RequestMapping("/")
     fun home(user: Principal): String {
@@ -21,7 +21,7 @@ class TimezonesApplication {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            SpringApplication.run(TimezonesApplication::class.java, *args)
+            SpringApplication.run(ExpensesTrackerApplication::class.java, *args)
         }
     }
 
