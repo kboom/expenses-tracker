@@ -3,7 +3,7 @@ version: "3"
 services:
 
   expenses-tracker-auth:
-    image: ggurgul/expenses-tracker-auth:0.0.1-SNAPSHOT
+    image: ggurgul/expenses-tracker-auth:latest
     ports:
       - 80:9999
     extra_hosts:
@@ -13,7 +13,7 @@ services:
         ipv4_address: 172.100.1.3
 
   expenses-tracker-service:
-    image: ggurgul/expenses-tracker-service:1.0-SNAPSHOT
+    image: ggurgul/expenses-tracker-service:latest
     ports:
       - 80:9998
     networks:
