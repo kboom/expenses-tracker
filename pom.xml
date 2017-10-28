@@ -8,7 +8,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>expenses-tracker-server</module>
+        <module>expenses-tracker-auth</module>
+        <module>expenses-tracker-service</module>
         <module>expenses-tracker-client</module>
     </modules>
 
