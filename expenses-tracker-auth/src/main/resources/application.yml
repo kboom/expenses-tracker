@@ -1,0 +1,32 @@
+security:
+  oauth2:
+    client:
+      client-id: acme
+      client-secret: acmesecret
+      scope: read,write
+      auto-approve-scopes: '.*'
+
+facebook:
+  client:
+    clientId: 331283990675863 # Obviously this should be hidden but as this is a private & demo repo...
+    clientSecret: df8e0d5dfa0d63f1fd1e21d5d683b323 # Obviously this should be hidden but as this is a private & demo repo...
+    accessTokenUri: https://graph.facebook.com/oauth/access_token
+    userAuthorizationUri: https://www.facebook.com/dialog/oauth
+    tokenName: oauth_token
+    authenticationScheme: query
+    clientAuthenticationScheme: form
+  resource:
+    userInfoUri: https://graph.facebook.com/me
+github:
+  client:
+    clientId: 404225905d6be83e609a # Obviously this should be hidden but as this is a private & demo repo...
+    clientSecret: 5faed714099be014cb05fd7b0926a007211aaeca # Obviously this should be hidden but as this is a private & demo repo...
+    accessTokenUri: https://github.com/login/oauth/access_token
+    userAuthorizationUri: https://github.com/login/oauth/authorize
+    clientAuthenticationScheme: form
+  resource:
+    userInfoUri: https://api.github.com/user
+
+logging:
+  level:
+    org.springframework.security: DEBUG
