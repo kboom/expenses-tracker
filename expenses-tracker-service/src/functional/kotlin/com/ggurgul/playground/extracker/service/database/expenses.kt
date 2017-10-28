@@ -6,7 +6,7 @@ import java.math.BigDecimal
 import java.util.*
 
 enum class Expense(
-        val expenseId: String,
+        val expenseId: UUID,
         val date: Date,
         val amount: BigDecimal,
         val description: String,
@@ -14,7 +14,7 @@ enum class Expense(
 ) {
 
     PS4(
-            expenseId = "000-000",
+            expenseId = UUID.fromString("00000000-0000-0000-0000-000000000001"),
             date = Date(),
             amount = BigDecimal.TEN,
             description = "PS4",

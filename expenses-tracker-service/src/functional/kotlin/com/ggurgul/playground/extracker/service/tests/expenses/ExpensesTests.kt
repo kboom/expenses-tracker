@@ -16,7 +16,7 @@ import org.junit.rules.TestRule
 internal class ExpensesTests : AbstractFunctionalTest() {
 
     private val dataLoadingRule = DataLoadingRule({
-        insertInto("EXPENSES") {
+        insertInto("expense") {
             insertExpense(this, Expense.PS4)
         }
     })
