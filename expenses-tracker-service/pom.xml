@@ -220,6 +220,7 @@
                 <configuration>
                     <compilerPlugins>
                         <plugin>spring</plugin>
+                        <plugin>jpa</plugin>
                     </compilerPlugins>
                     <jvmTarget>1.8</jvmTarget>
                 </configuration>
@@ -242,6 +243,11 @@
                     <dependency>
                         <groupId>org.jetbrains.kotlin</groupId>
                         <artifactId>kotlin-maven-allopen</artifactId>
+                        <version>${kotlin.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-maven-noarg</artifactId>
                         <version>${kotlin.version}</version>
                     </dependency>
                 </dependencies>
@@ -321,8 +327,8 @@
                 <version>2.18.1</version>
                 <configuration>
                     <skipTests>${skip.tests.unit}</skipTests>
-                    <excludedGroups>com.toptal.ggurgul.timezones.integration.IntegrationTest</excludedGroups>
-                    <excludedGroups>com.ggurgul.playground.extracker.service.FunctionalTest</excludedGroups>
+                    <!--<excludedGroups>com.toptal.ggurgul.timezones.integration.IntegrationTest</excludedGroups>-->
+                    <!--<excludedGroups>com.ggurgul.playground.extracker.service.FunctionalTest</excludedGroups>-->
                 </configuration>
                 <executions>
                     <execution>
@@ -337,7 +343,7 @@
                             <goal>test</goal>
                         </goals>
                         <configuration>
-                            <groups>com.toptal.ggurgul.timezones.integration.IntegrationTest</groups>
+                            <!--<groups>com.toptal.ggurgul.timezones.integration.IntegrationTest</groups>-->
                         </configuration>
                     </execution>
                 </executions>
