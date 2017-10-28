@@ -4,12 +4,8 @@
 
     <groupId>com.ggurgul.playground.extracker</groupId>
     <artifactId>expenses-tracker</artifactId>
-    <version>${app.version}</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-
-    <properties>
-        <app.version>0.1-SNAPSHOT</app.version>
-    </properties>
 
     <modules>
         <module>expenses-tracker-auth</module>

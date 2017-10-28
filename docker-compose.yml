@@ -3,36 +3,39 @@ version: "3"
 services:
 
   expenses-tracker-auth:
-    image: ggurgul/expenses-tracker-auth
+    image: ggurgul/expenses-tracker/expenses-tracker-auth
+    container_name: expenses-tracker-auth
     ports:
-      - 80:9999
+      - 9999:80
     extra_hosts:
       - "auth.expenses.com:172.100.1.3"
     networks:
       backnet:
-        ipv4_address: 172.100.1.3
+        ipv4_address: 172.100.1.90
 
   expenses-tracker-service:
-    image: ggurgul/expenses-tracker-service
+    image: ggurgul/expenses-tracker/expenses-tracker-service
+    container_name: expenses-tracker-service
     ports:
-      - 80:9998
+      - 9998:80
     networks:
       backnet:
-        ipv4_address: 172.100.1.2
+        ipv4_address: 172.100.1.40
     depends_on:
       - expenses-tracker-service-db
       - mailserver
     command: \
-      --spring.datasource.url=jdbc:postgresql://172.100.1.3:5432/test \
-      --services.auth.baseUrl=http://172.100.1.3
+      --spring.datasource.url=jdbc:postgresql://172.100.1.41:5432/test \
+      --services.auth.baseUrl=http://172.100.1.90
 
   expenses-tracker-service-db:
     image: postgres:9.4
+    container_name: expenses-tracker-service-db
     ports:
       - 5432:5432
     networks:
       backnet:
-        ipv4_address: 172.100.1.3
+        ipv4_address: 172.100.1.41
     environment:
       POSTGRES_DB: test
       POSTGRES_USER: test
@@ -40,6 +43,7 @@ services:
 
   mailserver:
     image: tvial/docker-mailserver:latest
+    container_name: mailserver
     hostname: mail
     domainname: domain.com
     networks:
