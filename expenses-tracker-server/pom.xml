@@ -410,7 +410,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <repository>kbhit/project</repository>
+                    <repository>ggurgul/expenses-tracker-server</repository>
                     <tag>${project.version}</tag>
                 </configuration>
             </plugin>
