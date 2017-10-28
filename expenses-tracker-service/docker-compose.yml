@@ -2,19 +2,31 @@ version: "3"
 
 services:
 
-  server:
-    image: ggurgul/expenses-tracker-server:1.0-SNAPSHOT
+  expenses-tracker-auth:
+    image: ggurgul/expenses-tracker-auth:0.0.1-SNAPSHOT
     ports:
-      - 8080:8080
+      - 80:9999
+    extra_hosts:
+      - "auth.expenses.com:172.100.1.3"
+    networks:
+      backnet:
+        ipv4_address: 172.100.1.3
+
+  expenses-tracker-service:
+    image: ggurgul/expenses-tracker-service:1.0-SNAPSHOT
+    ports:
+      - 80:9998
     networks:
       backnet:
         ipv4_address: 172.100.1.2
     depends_on:
-      - database
+      - expenses-tracker-service-db
       - mailserver
-    command: --spring.datasource.url=jdbc:postgresql://172.100.1.3:5432/test --mail.host=172.100.1.4
+    command: \
+      --spring.datasource.url=jdbc:postgresql://172.100.1.3:5432/test \
+      --services.auth.baseUrl=http://172.100.1.3
 
-  database:
+  expenses-tracker-service-db:
     image: postgres:9.4
     ports:
       - 5432:5432

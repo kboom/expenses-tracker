@@ -1,6 +1,6 @@
 server:
+  port: 80
   contextPath: /api
-  port: 9999
 
 services:
   auth:
@@ -15,3 +15,16 @@ security:
       user-authorization-uri: ${services.auth.baseUrl}/oauth/authorize
     resource:
       user-info-uri: ${services.auth.baseUrl}/me
+
+logging:
+  level:
+    org.springframework.security: ERROR
+
+---
+spring:
+  profiles: dev
+server:
+  port: 9999
+logging:
+  level:
+    org.springframework.security: DEBUG

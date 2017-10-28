@@ -1,5 +1,5 @@
 server:
-  port: 9998
+  port: 80
 
 security:
   oauth2:
@@ -46,6 +46,15 @@ github:
   resource:
     userInfoUri: https://api.github.com/user
 
+logging:
+  level:
+    org.springframework.security: ERROR
+
+---
+spring:
+  profiles: dev
+server:
+  port: 9998
 logging:
   level:
     org.springframework.security: DEBUG
