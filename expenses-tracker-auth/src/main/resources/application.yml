@@ -20,6 +20,22 @@ facebook:
     clientAuthenticationScheme: form
   resource:
     userInfoUri: https://graph.facebook.com/me
+google:
+  client:
+    clientId: 903270973168-v8avhmisqq0p0a5ih7bgmpsqicgecujo.apps.googleusercontent.com # Obviously this should be hidden but as this is a private & demo repo...
+    clientSecret: mzfvujQ8qZZuytVVFeKVPLWc # Obviously this should be hidden but as this is a private & demo repo...
+    accessTokenUri: https://www.googleapis.com/oauth2/v4/token
+    userAuthorizationUri: https://accounts.google.com/o/oauth2/v2/auth
+    tokenName: oauth_token
+    authenticationScheme: query
+    scope:
+     - openid
+     - email
+     - profile
+    clientAuthenticationScheme: form
+  resource:
+    userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
+    preferTokenInfo: true
 github:
   client:
     clientId: 404225905d6be83e609a # Obviously this should be hidden but as this is a private & demo repo...

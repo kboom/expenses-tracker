@@ -102,10 +102,17 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
 		return new ClientResources();
 	}
 
+	@Bean
+	@ConfigurationProperties("google")
+	public ClientResources google() {
+		return new ClientResources();
+	}
+
 	private Filter ssoFilter() {
 		CompositeFilter filter = new CompositeFilter();
 		List<Filter> filters = new ArrayList<>();
 		filters.add(ssoFilter(facebook(), "/login/facebook"));
+		filters.add(ssoFilter(google(), "/login/google"));
 		filters.add(ssoFilter(github(), "/login/github"));
 		filter.setFilters(filters);
 		return filter;
