@@ -1,13 +1,13 @@
 server:
   port: 80
 
+keystore:
+  password: mySecretKey
+
 security:
-  oauth2:
-    client:
-      client-id: expenses-tracker-service
-      client-secret: j982hsf#sjfjvoln3r3ofhslfnsofhbbOO
-      scope: read,write
-      auto-approve-scopes: '.*'
+ oauth2:
+   resource:
+     userInfoUri: http://localhost:9998/user
 
 facebook:
   client:
