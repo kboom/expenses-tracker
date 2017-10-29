@@ -22,7 +22,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-public class SocialApplicationTests {
+public class AppTests {
 
 	@Test
 	public void contextLoads() {

@@ -46,6 +46,19 @@ github:
   resource:
     userInfoUri: https://api.github.com/user
 
+spring:
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+
+  datasource:
+      url: jdbc:postgresql://0.0.0.0:5432/auth
+      username: test
+      password: test
+      driver-class-name: org.postgresql.Driver
+
 logging:
   level:
     org.springframework.security: ERROR
@@ -53,6 +66,10 @@ logging:
 ---
 spring:
   profiles: dev
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
 server:
   port: 9998
 logging:
