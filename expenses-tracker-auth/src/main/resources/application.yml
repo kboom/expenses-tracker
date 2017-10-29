@@ -1,4 +1,5 @@
 server:
+#  contextPath: /auth
   port: 80
 
 keystore:
@@ -35,6 +36,7 @@ google:
     clientAuthenticationScheme: form
   resource:
     userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
+    userAuthorizationUri: http://localhost
     preferTokenInfo: true
 github:
   client:

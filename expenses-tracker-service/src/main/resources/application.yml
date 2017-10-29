@@ -23,12 +23,12 @@ security:
   oauth2:
     client:
       client-id: expenses-tracker-service
-      client-secret: j982hsf#sjfjvoln3r3ofhslfnsofhbbOO
+      client-secret: expenses-tracker-service-secret
       access-token-uri: ${services.auth.baseUrl}/oauth/token
       user-authorization-uri: ${services.auth.baseUrl}/oauth/authorize
     resource:
       jwt:
-        keyUri: ${services.auth.baseUrl}/auth/oauth/token_key
+        keyUri: ${services.auth.baseUrl}/oauth/token_key
 
 logging:
   level:

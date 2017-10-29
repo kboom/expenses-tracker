@@ -101,7 +101,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return registration;
     }
 
-    private static class ClientResource {
+    /**
+     * Note that this class must be public in order for injection to work.
+     */
+    public static class ClientResource {
 
         @NestedConfigurationProperty
         private AuthorizationCodeResourceDetails client = new AuthorizationCodeResourceDetails();
@@ -109,11 +112,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         @NestedConfigurationProperty
         private ResourceServerProperties resource = new ResourceServerProperties();
 
-        private AuthorizationCodeResourceDetails getClient() {
+        public AuthorizationCodeResourceDetails getClient() {
             return client;
         }
 
-        private ResourceServerProperties getResource() {
+        public ResourceServerProperties getResource() {
             return resource;
         }
 

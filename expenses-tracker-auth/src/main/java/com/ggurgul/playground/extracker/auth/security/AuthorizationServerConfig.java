@@ -45,10 +45,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
                 .withClient("expenses-tracker-service")
-                .secret("j982hsf#sjfjvoln3r3ofhslfnsofhbbOO")
-                .authorizedGrantTypes("password", "authorization_code", "refresh_token")
+                .secret("expenses-tracker-service-secret")
+                .authorizedGrantTypes("client_credentials", "password", "authorization_code", "refresh_token")
                 .accessTokenValiditySeconds(3600)
                 .refreshTokenValiditySeconds(2592000)
+                .redirectUris("/*")
                 .scopes("read","write")
                 .autoApprove(".*");
     }

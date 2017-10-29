@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,12 +27,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RestController
 public class App {
 
-    @RequestMapping(path = {"/user", "/me"}, method = GET,
-            produces = { MediaType.ALL_VALUE })
+    @RequestMapping(path = {"/user", "/me"}, produces = { MediaType.ALL_VALUE })
     public Principal user(Principal principal) {
         return principal;
     }
-
 
     @Configuration
     public static class WebConfig extends WebMvcConfigurerAdapter {

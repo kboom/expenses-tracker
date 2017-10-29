@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@TestPropertySource(locations = {"classpath:application-test.yml"})
+//@TestPropertySource(locations = {"classpath:application-test.yml"})
 @ActiveProfiles("dev")
 public class DirectPasswordGrantTests {
 
@@ -89,9 +89,9 @@ public class DirectPasswordGrantTests {
     public void canBeSuccessfulIfEverythingValid() throws Exception {
         final String accessToken = getToken(issueTokenRequest(VALID_USER, VALID_USER_PASS));
         mockMvc.perform(
-                get("/")
+                get("/user")
                         .header("Authorization", "Bearer " + accessToken)
-//                        .header("X-Requested-With", "XMLHttpRequest")
+                        .header("X-Requested-With", "XMLHttpRequest")
                         .accept(CONTENT_TYPE)
         ).andExpect(status().isCreated());
     }
