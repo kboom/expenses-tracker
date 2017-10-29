@@ -1,11 +1,9 @@
-package com.ggurgul.playground.extracker.auth.functional.expenses;
+package com.ggurgul.playground.extracker.auth.functional.tests;
 
 
 import com.ggurgul.playground.extracker.auth.functional.AbstractFunctionalTest;
 import com.ggurgul.playground.extracker.auth.models.User;
 import com.ggurgul.playground.extracker.auth.repositories.UserRepository;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import io.restassured.http.Header;
 import io.restassured.response.Response;
 import org.junit.Before;
@@ -37,9 +35,6 @@ public class DirectionPasswordGrantFunctionalTest extends AbstractFunctionalTest
     @Test
     public void canUseToken() throws Exception {
         final String token = getToken(issueTokenRequest(VALID_USER, VALID_USER_PASS));
-
-        reset();
-
         given()
                 .header(new Header("Authorization", "Bearer " + token))
                 .get("/me")

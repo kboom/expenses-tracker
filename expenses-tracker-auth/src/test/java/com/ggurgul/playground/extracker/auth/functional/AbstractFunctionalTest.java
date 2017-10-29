@@ -1,8 +1,6 @@
 package com.ggurgul.playground.extracker.auth.functional;
 
 import io.restassured.RestAssured;
-import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.config.ConnectionConfig;
 import org.junit.Before;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -30,7 +28,7 @@ public abstract class AbstractFunctionalTest {
         reset();
     }
 
-    protected void reset() {
+    private void reset() {
         RestAssured.reset();
         RestAssured.port = port;
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
