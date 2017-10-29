@@ -48,7 +48,7 @@ public class DirectPasswordGrantTests {
     private String clientId = "expenses-tracker-service";
 
 //    @Value("${security.oauth2.client.client-secret}")
-    private String clientSecret = "j982hsf#sjfjvoln3r3ofhslfnsofhbbOO";
+    private String clientSecret = "expenses-tracker-service-secret";
 
     @Autowired
     private WebApplicationContext wac;
@@ -89,7 +89,7 @@ public class DirectPasswordGrantTests {
     public void canBeSuccessfulIfEverythingValid() throws Exception {
         final String accessToken = getToken(issueTokenRequest(VALID_USER, VALID_USER_PASS));
         mockMvc.perform(
-                get("/user")
+                get("/me")
                         .header("Authorization", "Bearer " + accessToken)
                         .header("X-Requested-With", "XMLHttpRequest")
                         .accept(CONTENT_TYPE)
