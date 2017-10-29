@@ -1,5 +1,6 @@
 package com.ggurgul.playground.extracker.auth.security;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
@@ -102,23 +103,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * Note that this class must be public in order for injection to work.
+     * This class has to have public getters for property injection to work.
      */
-    public static class ClientResource {
+    @Getter
+    private static class ClientResource {
 
         @NestedConfigurationProperty
         private AuthorizationCodeResourceDetails client = new AuthorizationCodeResourceDetails();
 
         @NestedConfigurationProperty
         private ResourceServerProperties resource = new ResourceServerProperties();
-
-        public AuthorizationCodeResourceDetails getClient() {
-            return client;
-        }
-
-        public ResourceServerProperties getResource() {
-            return resource;
-        }
 
     }
 
