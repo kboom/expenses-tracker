@@ -7,6 +7,7 @@ import com.ggurgul.playground.extracker.auth.repositories.UserRepository
 import io.restassured.RestAssured.given
 import io.restassured.http.Header
 import io.restassured.response.Response
+import org.hamcrest.Matchers
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.hasSize
 import org.junit.Before
@@ -22,6 +23,7 @@ class DirectionPasswordGrantFunctionalTest : AbstractFunctionalTest() {
 
     @Before
     fun setup() {
+        userRepository.deleteAll()
         userRepository.save(User(
                 username = VALID_USER,
                 password = VALID_USER_PASS,
@@ -31,15 +33,45 @@ class DirectionPasswordGrantFunctionalTest : AbstractFunctionalTest() {
 
     @Test
     @Throws(Exception::class)
-    fun canUseToken() {
+    fun cannotGetTokenIfWrongPasswordUsed() {
+        issueTokenRequest(VALID_USER, "invalid").then().statusCode(400)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun cannotGetTokenIfNotExistingUserUsed() {
+        issueTokenRequest("invalid", "anything").then().statusCode(401)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun canUseTokenToGetSecuredUserDetails() {
         val token = getToken(issueTokenRequest(VALID_USER, VALID_USER_PASS))
         given()
                 .header(Header("Authorization", "Bearer " + token))
                 .get("/me")
                 .then()
                 .statusCode(200)
-                .body("_embedded.expenses", hasSize<Any>(equalTo(1)))
-                .body("_embedded.expenses[0].name", equalTo("Ps4"))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun canUseTemperedWithToken() {
+        val token = getToken(issueTokenRequest(VALID_USER, VALID_USER_PASS))
+        given()
+                .header(Header("Authorization", "Bearer " + token + "x"))
+                .get("/me")
+                .then()
+                .statusCode(401)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun unauthorizedIfNoTokenPresent() {
+        given()
+                .get("/me")
+                .then()
+                .statusCode(401)
     }
 
     @Throws(Exception::class)
