@@ -59,12 +59,13 @@ class UserService(
     }
 
     @Transactional
-    fun registerUser(user: User) {
+    fun registerUser(user: User): User {
         user.enabled = false
         userRepository.save(user)
         val userCode = userCodeFactory.generateFor(user, UserCodeType.REGISTRATION_CONFIRMATION)
         userCodesRepository.save(userCode)
         eventPublisher.publishEvent(RegistrationCodeIssuedEvent(userCode))
+        return user
     }
 
     @Transactional
