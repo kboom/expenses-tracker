@@ -1,60 +1,50 @@
 package com.ggurgul.playground.extracker.auth.models
 
-import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.userdetails.UserDetails
-import java.util.*
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY
 import javax.persistence.*
+import javax.validation.constraints.NotNull
+import javax.validation.constraints.Size
 
 @Entity
-@Table(name = "users")
+@Table(name = "USERS")
 class User(
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
-        @Column(name = "user_id", nullable = false, updatable = false)
-        private val id: Long? = null,
+    @Id
+    @Column(name = "ID")
+    @SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
+    val id: Long? = null,
 
-        @Column(name = "username", nullable = false, unique = true)
-        private val username: String? = null,
+    @Column(name = "USERNAME", length = 50, unique = true)
+    @NotNull
+    @Size(min = 4, max = 50)
+    val username: String? = null,
 
-        @Column(name = "password", nullable = false)
-        private val password: String? = null,
+    @Column(name = "PASSWORD")
+    @NotNull
+    @JsonProperty(access = WRITE_ONLY)
+    var password: String? = null,
 
-        @Column(name = "enabled", nullable = false)
-        private val enabled: Boolean = false
+    @Column(name = "FIRST_NAME", length = 50)
+    @Size(min = 4, max = 50)
+    var firstName: String? = null,
 
-) : UserDetails {
+    @Column(name = "LAST_NAME", length = 50)
+    @Size(min = 4, max = 50)
+    var lastName: String? = null,
 
-    override fun getAuthorities(): Collection<GrantedAuthority> {
-        return ArrayList() // todo for now
-    }
+    @Column(name = "EMAIL", length = 50)
+    @NotNull
+    @Size(min = 4, max = 50)
+    var email: String,
 
-    override fun isAccountNonExpired(): Boolean {
-        return true
-    }
+    @Column(name = "ENABLED")
+    @NotNull
+    var enabled: Boolean = false,
 
-    override fun isAccountNonLocked(): Boolean {
-        return true
-    }
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(uniqueConstraints = arrayOf(UniqueConstraint(columnNames = arrayOf("USER_ID", "AUTHORITY_NAME"))), name = "USER_AUTHORITIES", joinColumns = arrayOf(JoinColumn(name = "USER_ID", referencedColumnName = "ID")), inverseJoinColumns = arrayOf(JoinColumn(name = "AUTHORITY_NAME", referencedColumnName = "AUTHORITY_NAME")))
+    var authorities: List<Authority> = emptyList()
 
-    override fun isCredentialsNonExpired(): Boolean {
-        return true
-    }
-
-    override fun isEnabled(): Boolean {
-        return enabled
-    }
-
-    override fun getPassword(): String? {
-        return password
-    }
-
-    override fun getUsername(): String? {
-        return username
-    }
-
-    companion object {
-        private val serialVersionUID = 1L
-    }
-
-}
+)

@@ -1,21 +1,27 @@
 package com.ggurgul.playground.extracker.auth
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpMethod
+import org.springframework.data.repository.query.spi.EvaluationContextExtension
+import org.springframework.data.repository.query.spi.EvaluationContextExtensionSupport
 import org.springframework.http.MediaType
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client
+import org.springframework.mail.MailSender
+import org.springframework.mail.SimpleMailMessage
+import org.springframework.mail.javamail.JavaMailSenderImpl
+import org.springframework.security.access.expression.SecurityExpressionRoot
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import org.springframework.web.filter.CorsFilter
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
-
 import java.security.Principal
-import java.util.LinkedHashMap
-
-import org.springframework.web.bind.annotation.RequestMethod.GET
 
 /**
  * Implement internal user mechanisms https://gigsterous.github.io/engineering/2017/03/01/spring-boot-4.html
@@ -30,6 +36,84 @@ class App {
     fun user(principal: Principal): Principal {
         return principal
     }
+
+    @Bean
+    fun bCryptPasswordEncoder(): BCryptPasswordEncoder {
+        return BCryptPasswordEncoder()
+    }
+
+    @Bean
+    fun securityExtension(): EvaluationContextExtension {
+        return SecurityEvaluationContextExtension()
+    }
+
+    @Bean
+    fun mailSender(
+            @Value("\${mail.host}") host: String,
+            @Value("\${mail.account.username}") username: String,
+            @Value("\${mail.account.password}") password: String
+    ): MailSender {
+        val sender = JavaMailSenderImpl()
+        sender.host = host
+        sender.username = username
+        sender.password = password
+
+        sender.testConnection()
+
+        return sender
+    }
+
+    @Bean
+    fun registrationEmailMessage(
+            @Value("\${registration.email.subject}") subject: String,
+            @Value("\${registration.email.from}") from: String
+    ): SimpleMailMessage {
+        val message = SimpleMailMessage()
+        message.from = from
+        message.subject = subject
+        return message
+    }
+
+    @Bean
+    fun passwordResetEmailMessage(
+            @Value("\${user.password.reset.email.subject}") subject: String,
+            @Value("\${user.password.reset.email.from}") from: String
+    ): SimpleMailMessage {
+        val message = SimpleMailMessage()
+        message.from = from
+        message.subject = subject
+        return message
+    }
+
+    @Bean
+    fun corsFilter(): CorsFilter {
+        val source = UrlBasedCorsConfigurationSource()
+        val config = CorsConfiguration()
+        config.allowCredentials = true
+        config.addAllowedOrigin("*")
+        config.addAllowedHeader("*")
+        config.addAllowedMethod("OPTIONS")
+        config.addAllowedMethod("GET")
+        config.addAllowedMethod("POST")
+        config.addAllowedMethod("PATCH")
+        config.addAllowedMethod("PUT")
+        config.addAllowedMethod("DELETE")
+        source.registerCorsConfiguration("/**", config)
+        return CorsFilter(source)
+    }
+
+    internal inner class SecurityEvaluationContextExtension : EvaluationContextExtensionSupport() {
+
+        override fun getExtensionId(): String {
+            return "security"
+        }
+
+        override fun getRootObject(): SecurityExpressionRoot {
+            val authentication = SecurityContextHolder.getContext().authentication
+            return object : SecurityExpressionRoot(authentication) {}
+        }
+    }
+
 
     @Configuration
     class WebConfig : WebMvcConfigurerAdapter() {

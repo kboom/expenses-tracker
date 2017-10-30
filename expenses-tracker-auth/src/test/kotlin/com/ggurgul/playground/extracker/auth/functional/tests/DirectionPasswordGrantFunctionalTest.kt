@@ -7,13 +7,12 @@ import com.ggurgul.playground.extracker.auth.repositories.UserRepository
 import io.restassured.RestAssured.given
 import io.restassured.http.Header
 import io.restassured.response.Response
-import org.hamcrest.Matchers
-import org.hamcrest.Matchers.equalTo
-import org.hamcrest.Matchers.hasSize
 import org.junit.Before
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.crypto.password.PasswordEncoder
 import java.util.*
+import javax.transaction.Transactional
 
 
 class DirectionPasswordGrantFunctionalTest : AbstractFunctionalTest() {
@@ -21,12 +20,16 @@ class DirectionPasswordGrantFunctionalTest : AbstractFunctionalTest() {
     @Autowired
     private lateinit var userRepository: UserRepository
 
+    @Autowired
+    private lateinit var passwordEncoder: PasswordEncoder
+
     @Before
     fun setup() {
         userRepository.deleteAll()
         userRepository.save(User(
                 username = VALID_USER,
-                password = VALID_USER_PASS,
+                password = passwordEncoder.encode(VALID_USER_PASS),
+                email = "someone@anything.com",
                 enabled = true
         ))
     }

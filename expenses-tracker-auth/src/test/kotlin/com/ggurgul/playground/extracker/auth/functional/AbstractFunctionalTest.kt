@@ -8,10 +8,11 @@ import org.springframework.boot.autoconfigure.jdbc.EmbeddedDatabaseConnection
 import org.springframework.boot.context.embedded.LocalServerPort
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
+import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.mail.MailSender
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
-
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
 
 @Category(FunctionalTest::class)
 @RunWith(SpringRunner::class)
@@ -21,7 +22,10 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDO
 abstract class AbstractFunctionalTest {
 
     @LocalServerPort
-    private var port: Int? = null
+    private var appPort: Int? = null
+
+    @MockBean
+    private lateinit var mailSender: MailSender
 
     @Before
     fun before() {
@@ -30,7 +34,7 @@ abstract class AbstractFunctionalTest {
 
     private fun reset() {
         RestAssured.reset()
-        RestAssured.port = port!!
+        RestAssured.port = appPort!!
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()
     }
 

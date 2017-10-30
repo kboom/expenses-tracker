@@ -1,5 +1,6 @@
 package com.ggurgul.playground.extracker.auth.controllers
 
+import com.ggurgul.playground.extracker.auth.exceptions.UserNotFoundException
 import com.ggurgul.playground.extracker.auth.models.User
 import com.ggurgul.playground.extracker.auth.repositories.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,7 +20,7 @@ class UserController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping("/:username")
     fun getUserByUsername(@PathParam("username") username: String): User {
-        return userRepository.findOneByUsername(username)
+        return userRepository.findByUsername(username).orElseThrow { UserNotFoundException() }
     }
 
 }
