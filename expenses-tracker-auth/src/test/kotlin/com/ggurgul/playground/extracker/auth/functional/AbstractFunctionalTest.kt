@@ -1,6 +1,7 @@
 package com.ggurgul.playground.extracker.auth.functional
 
 import io.restassured.RestAssured
+import io.restassured.builder.RequestSpecBuilder
 import org.junit.Before
 import org.junit.experimental.categories.Category
 import org.junit.runner.RunWith
@@ -35,6 +36,10 @@ abstract class AbstractFunctionalTest {
     private fun reset() {
         RestAssured.reset()
         RestAssured.port = appPort!!
+        RestAssured.requestSpecification = RequestSpecBuilder()
+                .setContentType("application/json")
+                .setAccept("application/json")
+                .build()
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()
     }
 

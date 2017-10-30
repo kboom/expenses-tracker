@@ -12,7 +12,6 @@ import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.util.*
-import javax.transaction.Transactional
 
 
 class DirectionPasswordGrantFunctionalTest : AbstractFunctionalTest() {

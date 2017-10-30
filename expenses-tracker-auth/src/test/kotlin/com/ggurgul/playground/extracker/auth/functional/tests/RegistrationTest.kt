@@ -1,11 +1,22 @@
 package com.ggurgul.playground.extracker.auth.functional.tests
 
 import com.ggurgul.playground.extracker.auth.functional.AbstractFunctionalTest
+import com.ggurgul.playground.extracker.auth.repositories.UserRepository
 import io.restassured.RestAssured
+import org.junit.Before
 import org.junit.Test
+import org.springframework.beans.factory.annotation.Autowired
 
 
 class RegistrationTest : AbstractFunctionalTest() {
+
+    @Autowired
+    private lateinit var userRepository: UserRepository
+
+    @Before
+    fun setUp() {
+        userRepository.deleteAll()
+    }
 
     @Test
     fun userCanRegister() {
@@ -19,7 +30,7 @@ class RegistrationTest : AbstractFunctionalTest() {
                 """.trim())
                 .post("/registration")
                 .then()
-                .statusCode(201)
+                .statusCode(200)
     }
 
 }

@@ -10,6 +10,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
@@ -42,11 +43,19 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
-        http.antMatcher("/**").authorizeRequests().antMatchers("/", "/login**", "/webjars/**").permitAll().anyRequest()
-                .authenticated().and().exceptionHandling()
+        http.antMatcher("/**")
+                .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/account/password/reset*/**").permitAll()
+                .antMatchers("/auth/**", "/registration/**").permitAll()
+                .antMatchers("/", "/login**", "/webjars/**").permitAll()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .exceptionHandling()
                 .authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/")).and().logout()
-                .logoutSuccessUrl("/").permitAll().and().csrf()
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
+                .logoutSuccessUrl("/").permitAll()
+                // .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .and().csrf().disable() // todo consider how to enable this only for parts of the service which is exposed to the web browser
                 .addFilterBefore(createClientFilter(), BasicAuthenticationFilter::class.java)
     }
 
