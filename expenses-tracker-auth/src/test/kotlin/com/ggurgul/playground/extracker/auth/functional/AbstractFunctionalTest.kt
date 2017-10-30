@@ -2,6 +2,7 @@ package com.ggurgul.playground.extracker.auth.functional
 
 import io.restassured.RestAssured
 import io.restassured.builder.RequestSpecBuilder
+import org.apache.http.impl.client.HttpClients
 import org.junit.Before
 import org.junit.experimental.categories.Category
 import org.junit.runner.RunWith
@@ -11,9 +12,13 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.context.annotation.Bean
 import org.springframework.mail.MailSender
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.Configuration
+
 
 @Category(FunctionalTest::class)
 @RunWith(SpringRunner::class)
@@ -24,9 +29,6 @@ abstract class AbstractFunctionalTest {
 
     @LocalServerPort
     private var appPort: Int? = null
-
-    @MockBean
-    private lateinit var mailSender: MailSender
 
     @Before
     fun before() {
@@ -41,6 +43,15 @@ abstract class AbstractFunctionalTest {
                 .setAccept("application/json")
                 .build()
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()
+    }
+
+    @Configuration
+    @ComponentScan("com.ggurgul.playground.extracker.auth.management")
+    class TestUtilsContext {
+
+        @MockBean
+        private lateinit var mailSender: MailSender
+
     }
 
 }

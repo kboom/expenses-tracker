@@ -1,33 +1,28 @@
 package com.ggurgul.playground.extracker.auth.functional.tests
 
-import com.ggurgul.playground.extracker.auth.data.TestUser.GREEN_USER
 import com.ggurgul.playground.extracker.auth.functional.AbstractFunctionalTest
-import com.ggurgul.playground.extracker.auth.rules.AuthenticatedAsUser
-import com.ggurgul.playground.extracker.auth.rules.AuthenticationRule
+import com.ggurgul.playground.extracker.auth.management.LoginManager
+import com.ggurgul.playground.extracker.auth.management.UsersManager
 import io.restassured.RestAssured
 import org.hamcrest.Matchers
-import org.junit.Rule
 import org.junit.Test
-import org.springframework.boot.context.embedded.LocalServerPort
+import org.springframework.beans.factory.annotation.Autowired
 
-
+// https://github.com/junit-team/junit4/wiki/Rules
 class AccountTest : AbstractFunctionalTest() {
 
-    @LocalServerPort
-    private var appPort: Int? = null
+    @Autowired
+    private lateinit var loginManager: LoginManager
 
-    @get:Rule
-    var authenticationRule = object: AuthenticationRule() {
-
-        override fun getPort() = appPort!!
-
-    }
+    @Autowired
+    private lateinit var userManager: UsersManager
 
     @Test
-    @AuthenticatedAsUser(GREEN_USER)
     fun userCanGetProfile() {
+        val dummyUser = userManager.createDummyUser()
+
         RestAssured.given()
-                .header("Authorization", authenticationRule.token)
+                .header("Authorization", loginManager.getTokenFor(dummyUser.username!!, "secret"))
                 .get("/account")
                 .then()
                 .statusCode(200)

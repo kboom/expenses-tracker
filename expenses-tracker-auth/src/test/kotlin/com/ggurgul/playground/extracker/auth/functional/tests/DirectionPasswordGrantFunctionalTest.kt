@@ -2,41 +2,31 @@ package com.ggurgul.playground.extracker.auth.functional.tests
 
 
 import com.ggurgul.playground.extracker.auth.functional.AbstractFunctionalTest
-import com.ggurgul.playground.extracker.auth.models.User
-import com.ggurgul.playground.extracker.auth.repositories.UserRepository
+import com.ggurgul.playground.extracker.auth.management.UsersManager
 import io.restassured.RestAssured.given
 import io.restassured.http.Header
 import io.restassured.response.Response
 import org.junit.Before
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.crypto.password.PasswordEncoder
 import java.util.*
 
 
 class DirectionPasswordGrantFunctionalTest : AbstractFunctionalTest() {
 
     @Autowired
-    private lateinit var userRepository: UserRepository
-
-    @Autowired
-    private lateinit var passwordEncoder: PasswordEncoder
+    private lateinit var usersManager: UsersManager
 
     @Before
     fun setup() {
-        userRepository.deleteAll()
-        userRepository.save(User(
-                username = VALID_USER,
-                password = passwordEncoder.encode(VALID_USER_PASS),
-                email = "someone@anything.com",
-                enabled = true
-        ))
+        usersManager.clearAll();
+        usersManager.createDummyUser()
     }
 
     @Test
     @Throws(Exception::class)
     fun cannotGetTokenIfWrongPasswordUsed() {
-        issueTokenRequest(VALID_USER, "invalid").then().statusCode(400)
+        issueTokenRequest("dummy", "invalid").then().statusCode(400)
     }
 
     @Test
@@ -48,7 +38,7 @@ class DirectionPasswordGrantFunctionalTest : AbstractFunctionalTest() {
     @Test
     @Throws(Exception::class)
     fun canUseTokenToGetSecuredUserDetails() {
-        val token = getToken(issueTokenRequest(VALID_USER, VALID_USER_PASS))
+        val token = getToken(issueTokenRequest("dummy", "secret"))
         given()
                 .header(Header("Authorization", "Bearer " + token))
                 .get("/me")
@@ -59,7 +49,7 @@ class DirectionPasswordGrantFunctionalTest : AbstractFunctionalTest() {
     @Test
     @Throws(Exception::class)
     fun canUseTemperedWithToken() {
-        val token = getToken(issueTokenRequest(VALID_USER, VALID_USER_PASS))
+        val token = getToken(issueTokenRequest("dummy", "secret"))
         given()
                 .header(Header("Authorization", "Bearer " + token + "x"))
                 .get("/me")
@@ -99,8 +89,6 @@ class DirectionPasswordGrantFunctionalTest : AbstractFunctionalTest() {
     }
 
     companion object {
-        private val VALID_USER = "someone"
-        private val VALID_USER_PASS = "valid"
         private val VALID_CLIENT_ID = "expenses-tracker-service"
         private val VALID_CLIENT_SECRET = "expenses-tracker-service-secret"
     }
