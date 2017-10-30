@@ -19,7 +19,10 @@ class ResourceServerConfig : ResourceServerConfigurerAdapter() {
 
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
-        http.antMatcher("/me").authorizeRequests().anyRequest().authenticated()
+        http.antMatcher("/**")
+                .authorizeRequests()
+                .antMatchers("/me").authenticated()
+                .antMatchers("/account").authenticated()
     }
 
 }
