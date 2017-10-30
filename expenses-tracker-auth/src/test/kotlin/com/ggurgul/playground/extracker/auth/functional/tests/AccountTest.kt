@@ -22,7 +22,7 @@ class AccountTest : AbstractFunctionalTest() {
         val dummyUser = userManager.createDummyUser()
 
         RestAssured.given()
-                .header("Authorization", loginManager.getTokenFor(dummyUser.username!!, "secret"))
+                .header("Authorization", "Bearer ${loginManager.getTokenFor(dummyUser.username!!, "secret")}")
                 .get("/account")
                 .then()
                 .statusCode(200)

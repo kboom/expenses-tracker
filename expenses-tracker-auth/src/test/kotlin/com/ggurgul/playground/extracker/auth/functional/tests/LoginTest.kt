@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 
 
-class DirectionPasswordGrantFunctionalTest : AbstractFunctionalTest() {
+class LoginTest : AbstractFunctionalTest() {
 
     @Autowired
     private lateinit var usersManager: UsersManager

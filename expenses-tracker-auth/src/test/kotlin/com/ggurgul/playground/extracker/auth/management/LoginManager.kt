@@ -35,7 +35,7 @@ class LoginManager : ApplicationListener<EmbeddedServletContainerInitializedEven
         })
 
         if (response.statusLine.statusCode == 200) {
-            return ObjectMapper().readTree(EntityUtils.toByteArray(response.entity)).get("access_token").toString()
+            return ObjectMapper().readTree(EntityUtils.toByteArray(response.entity)).get("access_token").asText()
         } else {
             throw IllegalStateException("Could not log-in")
         }

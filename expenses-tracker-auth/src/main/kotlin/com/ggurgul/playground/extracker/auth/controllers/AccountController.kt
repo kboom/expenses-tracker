@@ -16,7 +16,7 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("/account")
-class AccountRestController
+class AccountController
 @Autowired constructor(
         private val userService: UserService,
         private val systemRunner: SystemRunner
