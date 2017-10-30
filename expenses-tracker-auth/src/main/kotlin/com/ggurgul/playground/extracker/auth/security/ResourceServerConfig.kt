@@ -1,6 +1,7 @@
 package com.ggurgul.playground.extracker.auth.security
 
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer
@@ -23,6 +24,8 @@ class ResourceServerConfig : ResourceServerConfigurerAdapter() {
                 .authorizeRequests()
                 .antMatchers("/me").authenticated()
                 .antMatchers("/account").authenticated()
+                .antMatchers(HttpMethod.POST, "/account/password/reset*/**").permitAll()
+                .antMatchers("/auth/**", "/registration/**").permitAll()
     }
 
 }
