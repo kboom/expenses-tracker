@@ -1,5 +1,6 @@
 package com.ggurgul.playground.extracker.auth.security
 
+import com.ggurgul.playground.extracker.auth.models.AuthorityName
 import com.ggurgul.playground.extracker.auth.models.IdentityType
 import com.ggurgul.playground.extracker.auth.services.ExternalIdentityExtractor
 import com.ggurgul.playground.extracker.auth.services.LocalUserDetailsService
@@ -41,14 +42,17 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     private lateinit var userDetailsService: LocalUserDetailsService
 
     @Throws(Exception::class)
-    override fun configure(auth: AuthenticationManagerBuilder?) {
-        auth!!.inMemoryAuthentication()
-                .withUser("kboom").password("secret").roles("ADMIN")
+    override fun configure(auth: AuthenticationManagerBuilder) {
+        auth.inMemoryAuthentication()
+                .withUser("kboom").password("secret").roles("ADMIN").and()
+        auth.userDetailsService(userDetailsService)
     }
 
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
+        // .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         http.antMatcher("/**")
+                .httpBasic().and()
                 .authorizeRequests()
                 .antMatchers("/", "/login**", "/webjars/**").permitAll()
                 .antMatchers("/registration/**").permitAll()

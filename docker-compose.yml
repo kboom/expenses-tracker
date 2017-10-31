@@ -32,7 +32,7 @@ services:
       --services.auth.baseUrl=http://172.100.1.90
 
   expenses-tracker-db:
-    image: postgres:9.4
+    image: sameersbn/postgresql:9.6-2
     container_name: expenses-tracker-db
     ports:
       - 5432:5432
@@ -40,9 +40,9 @@ services:
       backnet:
         ipv4_address: 172.100.1.41
     environment:
-      POSTGRES_DB: test
-      POSTGRES_USER: test
-      POSTGRES_PASSWORD: test
+      DB_NAME: test,auth
+      DB_USER: test
+      DB_PASS: test
 
   mailserver:
     image: tvial/docker-mailserver:latest

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 import org.springframework.core.io.ClassPathResource
+import org.springframework.http.MediaType
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken
 import org.springframework.security.oauth2.common.OAuth2AccessToken
@@ -17,13 +18,10 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer
 import org.springframework.security.oauth2.provider.OAuth2Authentication
+import org.springframework.security.oauth2.provider.token.*
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory
-
-import org.springframework.http.MediaType
-import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.oauth2.provider.token.*
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.security.Principal
@@ -48,9 +46,13 @@ class AuthorizationServerConfig : AuthorizationServerConfigurerAdapter() {
      * This endpoint gets called whenever the user becomes authenticated via oauth.
      */
     @RequestMapping(path = arrayOf("/user"), produces = arrayOf(MediaType.ALL_VALUE))
-    fun user(principal: Principal): Principal {
-        return (principal as OAuth2Authentication).userAuthentication.principal as UserPrincipal
+    fun user(principal: Principal?): Principal? {
+//        return (principal as OAuth2Authentication).userAuthentication.principal as UserPrincipal
+return principal
+        // should create user if not already present, gets in here only when social login
     }
+
+    // should have login form
 
     @Throws(Exception::class)
     override fun configure(oauthServer: AuthorizationServerSecurityConfigurer?) {
@@ -65,7 +67,7 @@ class AuthorizationServerConfig : AuthorizationServerConfigurerAdapter() {
                 .authorizedGrantTypes("client_credentials", "password", "authorization_code", "refresh_token")
                 .accessTokenValiditySeconds(3600)
                 .refreshTokenValiditySeconds(2592000)
-                .redirectUris("/*")
+                .redirectUris("http://localhost:9999/api/login")
                 .scopes("read", "write")
                 .autoApprove(".*")
     }

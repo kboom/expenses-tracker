@@ -24,7 +24,8 @@ class ResourceServerConfig : ResourceServerConfigurerAdapter() {
     override fun configure(http: HttpSecurity) {
         http.antMatcher("/auth/**")
                 .authorizeRequests()
-                .antMatchers("/account").authenticated()
+                .anyRequest()
+                .authenticated()
     }
 
 }

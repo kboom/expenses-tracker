@@ -1,12 +1,10 @@
 package com.ggurgul.playground.extracker.auth.services
 
-import com.ggurgul.playground.extracker.auth.exceptions.UserNotFoundException
 import com.ggurgul.playground.extracker.auth.management.SystemRunner
 import com.ggurgul.playground.extracker.auth.models.IdentityType
 import com.ggurgul.playground.extracker.auth.repositories.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -17,11 +15,10 @@ class LocalUserDetailsService
         private val systemRunner: SystemRunner
 ) : UserDetailsService {
 
-    @Throws(UsernameNotFoundException::class)
-    override fun loadUserByUsername(username: String): UserPrincipal {
+    override fun loadUserByUsername(username: String): UserPrincipal? {
         return systemRunner.runInSystemContext {
             userRepository.findByUsername(username).map { user -> UserPrincipal(user) }
-        }.orElseThrow { UserNotFoundException() }
+        }.orElse(null)
     }
 
     fun findByIdentity(identity: String, identityType: IdentityType): Optional<UserPrincipal> {
