@@ -46,6 +46,8 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         http.antMatcher("/**")
                 .authorizeRequests()
                 .antMatchers("/", "/login**", "/webjars/**").permitAll()
+                .antMatchers("/registration/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/auth/account/password/reset*/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

@@ -41,18 +41,18 @@ class LoginTest : AbstractFunctionalTest() {
         val token = getToken(issueTokenRequest("dummy", "secret"))
         given()
                 .header(Header("Authorization", "Bearer " + token))
-                .get("/me")
+                .get("/auth/account")
                 .then()
                 .statusCode(200)
     }
 
     @Test
     @Throws(Exception::class)
-    fun canUseTemperedWithToken() {
+    fun cannotUseTemperedWithToken() {
         val token = getToken(issueTokenRequest("dummy", "secret"))
         given()
                 .header(Header("Authorization", "Bearer " + token + "x"))
-                .get("/me")
+                .get("/auth/account")
                 .then()
                 .statusCode(401)
     }
@@ -61,7 +61,7 @@ class LoginTest : AbstractFunctionalTest() {
     @Throws(Exception::class)
     fun unauthorizedIfNoTokenPresent() {
         given()
-                .get("/me")
+                .get("/auth/account")
                 .then()
                 .statusCode(401)
     }

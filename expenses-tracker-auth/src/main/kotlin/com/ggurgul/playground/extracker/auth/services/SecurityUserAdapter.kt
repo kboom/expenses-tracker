@@ -1,10 +1,8 @@
 package com.ggurgul.playground.extracker.auth.services
 
 import com.ggurgul.playground.extracker.auth.models.User
-import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
-import kotlin.streams.toList
 
 
 class SecurityUserAdapter(

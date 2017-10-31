@@ -21,14 +21,19 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory
 
 import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
+import org.springframework.http.MediaType
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.oauth2.provider.token.*
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+import java.security.Principal
 import java.util.*
 
 
 @Configuration
 @EnableAuthorizationServer
+@RestController
 class AuthorizationServerConfig : AuthorizationServerConfigurerAdapter() {
 
     @Autowired
@@ -39,6 +44,16 @@ class AuthorizationServerConfig : AuthorizationServerConfigurerAdapter() {
 
     @Value("\${keystore.password}")
     private val pwd: String? = null
+
+    /**
+     * This endpoint gets called whenever the user becomes authenticated via oauth,
+     * either locally or via external identity provider. Obviously it is secured by the authorization server
+     * like any other resource, including those served by the resource server (which expects pre-authentication).
+     */
+    @RequestMapping(path = arrayOf("/user"), produces = arrayOf(MediaType.ALL_VALUE))
+    fun user(principal: Principal?): Principal? {
+        return principal
+    }
 
     @Throws(Exception::class)
     override fun configure(oauthServer: AuthorizationServerSecurityConfigurer?) {

@@ -23,7 +23,7 @@ class AccountTest : AbstractFunctionalTest() {
 
         RestAssured.given()
                 .header("Authorization", "Bearer ${loginManager.getTokenFor(dummyUser.username!!, "secret")}")
-                .get("/account")
+                .get("/auth/account")
                 .then()
                 .statusCode(200)
                 .body("username", Matchers.equalTo("alice"))

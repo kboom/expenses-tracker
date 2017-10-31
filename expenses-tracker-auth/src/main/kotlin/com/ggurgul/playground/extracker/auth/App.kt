@@ -14,14 +14,11 @@ import org.springframework.mail.javamail.JavaMailSenderImpl
 import org.springframework.security.access.expression.SecurityExpressionRoot
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
-import java.security.Principal
 
 /**
  * Implement internal user mechanisms https://gigsterous.github.io/engineering/2017/03/01/spring-boot-4.html
@@ -29,13 +26,7 @@ import java.security.Principal
  * http://www.swisspush.org/security/2016/10/17/oauth2-in-depth-introduction-for-enterprises
  */
 @SpringBootApplication
-@RestController
 class App {
-
-    @RequestMapping(path = arrayOf("/user", "/me"), produces = arrayOf(MediaType.ALL_VALUE))
-    fun user(principal: Principal): Principal {
-        return principal
-    }
 
     @Bean
     fun bCryptPasswordEncoder(): BCryptPasswordEncoder {

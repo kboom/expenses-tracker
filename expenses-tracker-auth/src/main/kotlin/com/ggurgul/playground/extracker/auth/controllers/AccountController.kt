@@ -15,7 +15,7 @@ import javax.validation.ConstraintViolationException
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/auth/account")
 class AccountController
 @Autowired constructor(
         private val userService: UserService,

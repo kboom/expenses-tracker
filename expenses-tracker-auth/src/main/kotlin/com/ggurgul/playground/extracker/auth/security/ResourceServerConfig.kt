@@ -1,7 +1,6 @@
 package com.ggurgul.playground.extracker.auth.security
 
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer
@@ -18,14 +17,14 @@ class ResourceServerConfig : ResourceServerConfigurerAdapter() {
         resources!!.resourceId("EXTRACKER_AUTH")
     }
 
+    /**
+     * Those are resources served by the server. All have to be under /auth path.
+     */
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
-        http.antMatcher("/**")
+        http.antMatcher("/auth/**")
                 .authorizeRequests()
-                .antMatchers("/me").authenticated()
                 .antMatchers("/account").authenticated()
-                .antMatchers(HttpMethod.POST, "/account/password/reset*/**").permitAll()
-                .antMatchers("/auth/**", "/registration/**").permitAll()
     }
 
 }
