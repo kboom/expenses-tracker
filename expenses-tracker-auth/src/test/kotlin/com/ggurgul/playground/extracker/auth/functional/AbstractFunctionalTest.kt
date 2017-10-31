@@ -1,10 +1,12 @@
 package com.ggurgul.playground.extracker.auth.functional
 
+import com.ggurgul.playground.extracker.auth.management.UsersManager
 import io.restassured.RestAssured
 import io.restassured.builder.RequestSpecBuilder
 import org.junit.Before
 import org.junit.experimental.categories.Category
 import org.junit.runner.RunWith
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.jdbc.EmbeddedDatabaseConnection
 import org.springframework.boot.context.embedded.LocalServerPort
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase

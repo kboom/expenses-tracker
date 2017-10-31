@@ -40,10 +40,10 @@ constructor(
     ): ResponseEntity<*> {
         systemRunner.runInSystemContext {
             userService.registerUser(User(
-                    username = registrationRequest.username,
+                    username = registrationRequest.username!!,
                     password = passwordEncoder.encode(registrationRequest.password),
                     email = registrationRequest.email!!,
-                    authorities = listOf(authorityRepository.findOne(AuthorityName.ROLE_USER))
+                    authorities = mutableListOf(authorityRepository.findOne(AuthorityName.ROLE_USER))
             ))
         }
         return ResponseEntity.ok("Registered")

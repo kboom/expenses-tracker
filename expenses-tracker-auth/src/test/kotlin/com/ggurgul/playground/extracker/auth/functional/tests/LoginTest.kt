@@ -19,7 +19,7 @@ class LoginTest : AbstractFunctionalTest() {
 
     @Before
     fun setup() {
-        usersManager.clearAll();
+        usersManager.resetAll();
         usersManager.createDummyUser()
     }
 

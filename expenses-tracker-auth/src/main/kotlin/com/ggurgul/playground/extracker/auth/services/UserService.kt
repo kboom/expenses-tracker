@@ -30,7 +30,7 @@ class UserService(
 
     fun getActingUser(): User {
         val auth = SecurityContextHolder.getContext().authentication
-        return userRepository.findOne((auth.principal as User).id)
+        return (auth.principal as UserPrincipal).user
     }
 
     @Transactional

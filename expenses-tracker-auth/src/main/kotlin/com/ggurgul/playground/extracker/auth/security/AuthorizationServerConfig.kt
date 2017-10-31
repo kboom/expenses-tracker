@@ -1,6 +1,7 @@
 package com.ggurgul.playground.extracker.auth.security
 
-import com.ggurgul.playground.extracker.auth.services.SecurityUserAdapter
+import com.ggurgul.playground.extracker.auth.services.LocalUserDetailsService
+import com.ggurgul.playground.extracker.auth.services.UserPrincipal
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -20,9 +21,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory
 
-import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
 import org.springframework.http.MediaType
-import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.oauth2.provider.token.*
 import org.springframework.web.bind.annotation.RequestMapping
@@ -40,19 +39,17 @@ class AuthorizationServerConfig : AuthorizationServerConfigurerAdapter() {
     private lateinit var authenticationManager: AuthenticationManager
 
     @Autowired
-    private lateinit var userDetailsService: UserDetailsService
+    private lateinit var userDetailsService: LocalUserDetailsService
 
     @Value("\${keystore.password}")
     private val pwd: String? = null
 
     /**
-     * This endpoint gets called whenever the user becomes authenticated via oauth,
-     * either locally or via external identity provider. Obviously it is secured by the authorization server
-     * like any other resource, including those served by the resource server (which expects pre-authentication).
+     * This endpoint gets called whenever the user becomes authenticated via oauth.
      */
     @RequestMapping(path = arrayOf("/user"), produces = arrayOf(MediaType.ALL_VALUE))
-    fun user(principal: Principal?): Principal? {
-        return principal
+    fun user(principal: Principal): Principal {
+        return (principal as OAuth2Authentication).userAuthentication.principal as UserPrincipal
     }
 
     @Throws(Exception::class)
@@ -112,7 +109,7 @@ class AuthorizationServerConfig : AuthorizationServerConfigurerAdapter() {
                     // todo no need to contact database, all details already there (especially important if it was being done in remote application)
                     DefaultUserAuthenticationConverter().apply {
                         setUserDetailsService(userDetailsService)
-                        // todo this will make principal of SecurityContext SecurityUserAdapter
+                        // todo this will make principal of SecurityContext UserPrincipal
                     }
             )
         }
@@ -123,7 +120,7 @@ class AuthorizationServerConfig : AuthorizationServerConfigurerAdapter() {
 
         override fun enhance(accessToken: OAuth2AccessToken, authentication: OAuth2Authentication): OAuth2AccessToken {
             val additionalInfo = HashMap<String, Any>()
-            val authenticatedUser = (authentication.principal as SecurityUserAdapter).user
+            val authenticatedUser = (authentication.principal as UserPrincipal).user
             additionalInfo.put("email", authenticatedUser.email)
             (accessToken as DefaultOAuth2AccessToken).additionalInformation = additionalInfo
             return accessToken

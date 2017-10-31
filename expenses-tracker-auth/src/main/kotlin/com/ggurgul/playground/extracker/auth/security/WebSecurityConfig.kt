@@ -1,5 +1,8 @@
 package com.ggurgul.playground.extracker.auth.security
 
+import com.ggurgul.playground.extracker.auth.models.IdentityType
+import com.ggurgul.playground.extracker.auth.services.ExternalIdentityExtractor
+import com.ggurgul.playground.extracker.auth.services.LocalUserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.security.SecurityProperties
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties
@@ -22,7 +25,6 @@ import org.springframework.security.oauth2.client.token.grant.code.Authorization
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository
 import org.springframework.web.filter.CompositeFilter
 import java.util.*
 import javax.servlet.Filter
@@ -34,6 +36,9 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
     @Autowired
     private lateinit var oauth2ClientContext: OAuth2ClientContext
+
+    @Autowired
+    private lateinit var userDetailsService: LocalUserDetailsService
 
     @Throws(Exception::class)
     override fun configure(auth: AuthenticationManagerBuilder?) {
@@ -61,21 +66,33 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
     @Bean
     @ConfigurationProperties("github")
-    fun github(): ClientResource {
-        return ClientResource()
-    }
+    fun github() = ClientResource(ExternalIdentityExtractor(
+            idKey = "sub",
+            identityType = IdentityType.GITHUB,
+            mailKey = "email",
+            usernameKey = "username",
+            userDetailsService = userDetailsService
+    ))
 
     @Bean
     @ConfigurationProperties("facebook")
-    fun facebook(): ClientResource {
-        return ClientResource()
-    }
+    fun facebook() = ClientResource(ExternalIdentityExtractor(
+            idKey = "sub",
+            identityType = IdentityType.FACEBOOK,
+            mailKey = "email",
+            usernameKey = "username",
+            userDetailsService = userDetailsService
+    ))
 
     @Bean
     @ConfigurationProperties("google")
-    fun google(): ClientResource {
-        return ClientResource()
-    }
+    fun google() = ClientResource(ExternalIdentityExtractor(
+            idKey = "sub",
+            identityType = IdentityType.GOOGLE,
+            mailKey = "email",
+            usernameKey = "username",
+            userDetailsService = userDetailsService
+    ))
 
     private fun createClientFilter(): Filter {
         val filter = CompositeFilter()
@@ -95,10 +112,11 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         val tokenServices = UserInfoTokenServices(
                 client.resource.userInfoUri, client.client.clientId)
         tokenServices.setRestTemplate(template)
+        tokenServices.setPrincipalExtractor(client.identityExtractor)
+        tokenServices.setAuthoritiesExtractor(client.identityExtractor)
         filter.setTokenServices(tokenServices)
         return filter
     }
-
 
     @Bean
     fun oauth2ClientFilterRegistration(filter: OAuth2ClientContextFilter): FilterRegistrationBean {
@@ -112,6 +130,8 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
      * This class has to have public getters for property injection to work.
      */
     class ClientResource(
+
+            val identityExtractor: ExternalIdentityExtractor,
 
             @NestedConfigurationProperty
             val client: AuthorizationCodeResourceDetails = AuthorizationCodeResourceDetails(),
