@@ -24,6 +24,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory
 import org.springframework.security.web.DefaultRedirectStrategy
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache
+import org.springframework.security.web.savedrequest.SavedRequest
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.security.Principal
@@ -51,14 +52,16 @@ class AuthorizationServerConfig : AuthorizationServerConfigurerAdapter() {
      */
     @RequestMapping(path = arrayOf("/user"), produces = arrayOf(MediaType.ALL_VALUE))
     fun user(request: HttpServletRequest, response: HttpServletResponse, principal: Principal?): Principal? {
-        val oldRedirectUrl = HttpSessionRequestCache().getRequest(request, response).redirectUrl
-        DefaultRedirectStrategy().sendRedirect(request, response, oldRedirectUrl) // all those should be in authentication success handler for basic auth
+//        val oldRequest = HttpSessionRequestCache().getRequest(request, response)
+//        if(oldRequest != null) {
+//            val oldRedirectUrl = oldRequest.redirectUrl
+//            DefaultRedirectStrategy().sendRedirect(request, response, oldRedirectUrl) // all those should be in authentication success handler for basic auth
+//        }
 
 //        return (principal as OAuth2Authentication).userAuthentication.principal as UserPrincipal
 return null
 
-        //SavedRequest savedRequest =
-        // (SavedRequest)session.getAttribute("SPRING_SECURITY_SAVED_REQUEST");
+//        val savedRequest = session.getAttribute("SPRING_SECURITY_SAVED_REQUEST") as SavedRequest
     }
 
     // should have login form

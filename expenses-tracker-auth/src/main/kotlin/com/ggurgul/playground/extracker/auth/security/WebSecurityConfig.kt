@@ -19,6 +19,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -56,8 +57,8 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity) {
         // .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         http.antMatcher("/**")
-                .httpBasic()
-                .authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/"))
+                .formLogin()
+//                .httpBasic()
                 .and()
                 .authorizeRequests()
                 .antMatchers("/", "/login**", "/webjars/**").permitAll()
@@ -67,10 +68,10 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 .authenticated()
                 .and()
                 .exceptionHandling()
-                .and().logout()
-                .logoutSuccessUrl("/").permitAll()
+                .authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/"))
+                .and().logout().logoutSuccessUrl("/").permitAll().and()
                 // .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .and().csrf().disable() // todo consider how to enable this only for parts of the service which is exposed to the web browser
+                .csrf().disable() // todo consider how to enable this only for parts of the service which is exposed to the web browser
                 .addFilterBefore(createClientFilter(), BasicAuthenticationFilter::class.java)
     }
 
