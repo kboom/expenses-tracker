@@ -1,18 +1,12 @@
 server:
-  port: 80
+  port: 9995
 
-spring:
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
-    show-sql: false
-    hibernate:
-      ddl-auto: validate
-
-  datasource:
-      url: jdbc:postgresql://0.0.0.0:5432/test
-      username: test
-      password: test
-      driver-class-name: org.postgresql.Driver
+zuul:
+  ignoredServices: '*'
+  routes:
+    expenses-tracker-auth: /auth/**
+    expenses-tracker-service: /expenses/api/**
+    # redirect root to ui (or /ui)
 
 eureka:
   instance:
@@ -25,6 +19,19 @@ eureka:
     serviceUrl:
       defaultZone: ${EUREKA_URL:http://localhost:9990/eureka/}
 
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: THREAD
+          thread:
+            timeoutInMilliseconds: 30000
+
+ribbon:
+  ReadTimeout: 30000
+  ConnectTimeout: 30000
+
 # todo TBF avoid hardcoded value somehow
 services:
   auth:
@@ -33,8 +40,8 @@ services:
 security:
   oauth2:
     client:
-      client-id: expenses-tracker-service
-      client-secret: expenses-tracker-service-secret
+      client-id: expenses-tracker-api
+      client-secret: expenses-tracker-api-secret
       access-token-uri: ${services.auth.baseUrl}/oauth/token
       user-authorization-uri: ${services.auth.baseUrl}/oauth/authorize
     resource:
@@ -43,20 +50,12 @@ security:
 
 logging:
   level:
-    org.springframework.security: ERROR
+    ROOT: INFO
+    org.springframework.web: INFO
 
 ---
 spring:
   profiles: dev
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: create-drop
-server:
-  port: 9999
-  session:
-    cookie:
-      name: SERVICE_SESSION
 logging:
   level:
     org.springframework.security: DEBUG

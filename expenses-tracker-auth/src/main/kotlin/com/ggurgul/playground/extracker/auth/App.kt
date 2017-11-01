@@ -3,6 +3,7 @@ package com.ggurgul.playground.extracker.auth
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.repository.query.spi.EvaluationContextExtension
@@ -26,6 +27,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  * http://www.swisspush.org/security/2016/10/17/oauth2-in-depth-introduction-for-enterprises
  */
 @SpringBootApplication
+@EnableEurekaClient
 class App {
 
     @Bean

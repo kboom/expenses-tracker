@@ -5,6 +5,17 @@ server:
 keystore:
   password: mySecretKey
 
+eureka:
+  instance:
+    prefer-ip-address: true
+    ip-address: ${HOST:localhost}
+    non-secure-port: ${server.port}
+    leaseRenewalIntervalInSeconds: 10
+    leaseExpirationDurationInSeconds: 20
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URL:http://localhost:9990/eureka/}
+
 security:
  oauth2:
    resource:
@@ -82,6 +93,10 @@ registration:
     from: noreply@timezones.com
     subject: Your registration link at Expenses Tracker App
 
+admin:
+  username: admin
+  password: secret
+
 user:
   password:
     reset:
@@ -103,6 +118,9 @@ spring:
       ddl-auto: create-drop
 server:
   port: 9998
+  session:
+    cookie:
+      name: AUTH_SESSION
 logging:
   level:
     org.springframework.security: DEBUG

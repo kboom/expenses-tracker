@@ -1,9 +1,10 @@
 package com.ggurgul.playground.extracker.auth.security
 
-import com.ggurgul.playground.extracker.auth.models.AuthorityName
 import com.ggurgul.playground.extracker.auth.models.IdentityType
 import com.ggurgul.playground.extracker.auth.services.ExternalIdentityExtractor
 import com.ggurgul.playground.extracker.auth.services.LocalUserDetailsService
+import com.ggurgul.playground.extracker.auth.services.UserPrincipal
+import com.ggurgul.playground.extracker.auth.services.UserPrincipalModel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.security.SecurityProperties
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties
@@ -18,6 +19,10 @@ import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.User
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.client.OAuth2ClientContext
 import org.springframework.security.oauth2.client.OAuth2RestTemplate
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter
@@ -43,16 +48,17 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
     @Throws(Exception::class)
     override fun configure(auth: AuthenticationManagerBuilder) {
-        auth.inMemoryAuthentication()
-                .withUser("kboom").password("secret").roles("ADMIN").and()
-        auth.userDetailsService(userDetailsService)
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder())
     }
 
+    // new SavedRequestAwareAuthenticationSuccessHandler()
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         // .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         http.antMatcher("/**")
-                .httpBasic().and()
+                .httpBasic()
+                .authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/"))
+                .and()
                 .authorizeRequests()
                 .antMatchers("/", "/login**", "/webjars/**").permitAll()
                 .antMatchers("/registration/**").permitAll()
@@ -61,12 +67,30 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 .authenticated()
                 .and()
                 .exceptionHandling()
-                .authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/")).and().logout()
+                .and().logout()
                 .logoutSuccessUrl("/").permitAll()
                 // .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and().csrf().disable() // todo consider how to enable this only for parts of the service which is exposed to the web browser
                 .addFilterBefore(createClientFilter(), BasicAuthenticationFilter::class.java)
     }
+
+    @Bean
+    fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
+
+    @Bean
+    fun predefinedUsers(): Map<String, UserPrincipal> = listOf(adminUser()).map {
+        UserPrincipalModel(User(
+                it.username,
+                passwordEncoder().encode(it.password),
+                mutableListOf(SimpleGrantedAuthority("ADMIN"))
+        ))
+    }.associateBy { it.username }
+
+    @Bean
+    @ConfigurationProperties("admin")
+    fun adminUser() = PredefinedUserResource()
+
+    // https://github.com/spring-guides/tut-spring-security-and-angular-js/blob/master/oauth2/authserver/src/main/java/demo/AuthserverApplication.java
 
     @Bean
     @ConfigurationProperties("github")
@@ -142,6 +166,17 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
             @NestedConfigurationProperty
             val resource: ResourceServerProperties = ResourceServerProperties()
+
+    )
+
+    /**
+     * This class has to have public getters for property injection to work.
+     */
+    class PredefinedUserResource(
+
+            var username: String = "",
+
+            var password: String = ""
 
     )
 

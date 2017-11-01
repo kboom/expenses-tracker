@@ -30,7 +30,9 @@ class UserService(
 
     fun getActingUser(): User {
         val auth = SecurityContextHolder.getContext().authentication
-        return (auth.principal as UserPrincipal).user
+        return userRepository.findByUsername((auth.principal as UserPrincipal).username).orElseThrow {
+            IllegalStateException("No user found")
+        }
     }
 
     @Transactional

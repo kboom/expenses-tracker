@@ -1,0 +1,22 @@
+server:
+  port: 80
+
+eureka:
+  server:
+    enableSelfPreservation: false
+  instance:
+    hostname: localhost
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+---
+spring:
+  profiles: dev
+server:
+  port: 9990
+logging:
+  level:
+    org.springframework.security: DEBUG

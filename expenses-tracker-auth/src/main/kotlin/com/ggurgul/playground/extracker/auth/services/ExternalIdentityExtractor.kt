@@ -30,7 +30,7 @@ class ExternalIdentityExtractor(
             }
         }
 
-        return UserPrincipal(User(
+        return UserPrincipalEntity(User(
                 username = "abcdef", //props.getOrDefault(usernameKey, identity) as String,
                 email = props.getOrElse(mailKey) { throw IllegalStateException("Bound account does not have e-mail address") } as String,
                 authorities = mutableListOf(Authority(AuthorityName.ROLE_USER))
@@ -39,7 +39,7 @@ class ExternalIdentityExtractor(
         }
     }
 
-    private fun UserPrincipal.createIdentity(identity: String): BoundIdentity {
+    private fun UserPrincipalEntity.createIdentity(identity: String): BoundIdentity {
         return BoundIdentity(
                 user = user,
                 internalId = identity,

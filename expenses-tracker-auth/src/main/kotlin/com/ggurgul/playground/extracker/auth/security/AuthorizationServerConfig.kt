@@ -22,10 +22,14 @@ import org.springframework.security.oauth2.provider.token.*
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory
+import org.springframework.security.web.DefaultRedirectStrategy
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.security.Principal
 import java.util.*
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 
 @Configuration
@@ -43,13 +47,18 @@ class AuthorizationServerConfig : AuthorizationServerConfigurerAdapter() {
     private val pwd: String? = null
 
     /**
-     * This endpoint gets called whenever the user becomes authenticated via oauth.
+     * This endpoint gets called whenever the user authenticates on a page having no redirect back link.
      */
     @RequestMapping(path = arrayOf("/user"), produces = arrayOf(MediaType.ALL_VALUE))
-    fun user(principal: Principal?): Principal? {
+    fun user(request: HttpServletRequest, response: HttpServletResponse, principal: Principal?): Principal? {
+        val oldRedirectUrl = HttpSessionRequestCache().getRequest(request, response).redirectUrl
+        DefaultRedirectStrategy().sendRedirect(request, response, oldRedirectUrl) // all those should be in authentication success handler for basic auth
+
 //        return (principal as OAuth2Authentication).userAuthentication.principal as UserPrincipal
-return principal
-        // should create user if not already present, gets in here only when social login
+return null
+
+        //SavedRequest savedRequest =
+        // (SavedRequest)session.getAttribute("SPRING_SECURITY_SAVED_REQUEST");
     }
 
     // should have login form
@@ -67,7 +76,18 @@ return principal
                 .authorizedGrantTypes("client_credentials", "password", "authorization_code", "refresh_token")
                 .accessTokenValiditySeconds(3600)
                 .refreshTokenValiditySeconds(2592000)
-                .redirectUris("http://localhost:9999/api/login")
+                .redirectUris("http://localhost:9999/login") // todo get rid of hardcoded values
+                .scopes("read", "write")
+                .autoApprove(".*")
+
+                .and()
+
+                .withClient("expenses-tracker-api")
+                .secret("expenses-tracker-api-secret")
+                .authorizedGrantTypes("client_credentials", "password", "authorization_code", "refresh_token")
+                .accessTokenValiditySeconds(3600)
+                .refreshTokenValiditySeconds(2592000)
+                .redirectUris("http://localhost:9995/login") // todo get rid of hardcoded values
                 .scopes("read", "write")
                 .autoApprove(".*")
     }
@@ -122,8 +142,8 @@ return principal
 
         override fun enhance(accessToken: OAuth2AccessToken, authentication: OAuth2Authentication): OAuth2AccessToken {
             val additionalInfo = HashMap<String, Any>()
-            val authenticatedUser = (authentication.principal as UserPrincipal).user
-            additionalInfo.put("email", authenticatedUser.email)
+            val authenticatedUser = (authentication.principal as UserPrincipal)
+            additionalInfo.put("email", authenticatedUser.getEmail())
             (accessToken as DefaultOAuth2AccessToken).additionalInformation = additionalInfo
             return accessToken
         }
