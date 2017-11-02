@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MdDialogRef, MdSnackBar} from "@angular/material";
-import {SecurityService} from "../../+security/security.service";
+import {UserService} from "../../+user/user.service";
 import {omit} from "lodash-es";
 import {validatorFor} from "../../validators/common.validators";
 import {PASSWORD_REGEX} from "../../validators/validation.rules";
@@ -57,7 +57,7 @@ export class PasswordChangeDialog {
 
     constructor(private fb: FormBuilder,
                 private dialogRef: MdDialogRef<PasswordChangeDialog>,
-                private authService: SecurityService,
+                private userService: UserService,
                 private snackBar: MdSnackBar) {
         this.passwordChangeForm = this.fb.group({
             oldPassword: ["", Validators.required, validatorFor(PASSWORD_REGEX)],
@@ -70,7 +70,7 @@ export class PasswordChangeDialog {
 
     doRegister(event): void {
         let formData = this.passwordChangeForm.value;
-        this.authService.changePassword(omit(formData, ['passwordRepeated']))
+        this.userService.changePassword(omit(formData, ['passwordRepeated']))
             .subscribe((x) => {
                 const snackBarRef = this.snackBar.open("Password changed", "Close", {
                     duration: 5000,

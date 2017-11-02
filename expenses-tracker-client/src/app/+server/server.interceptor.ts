@@ -6,7 +6,7 @@ import {
 import {Observable} from "rxjs/Observable";
 import "rxjs/add/operator/do";
 import {Router} from "@angular/router";
-import {SecurityContextHolder} from "../+security/security.context";
+import {UserHolder} from "../+user/user.holder";
 import {MdSnackBar} from "@angular/material";
 
 @Injectable()
@@ -18,7 +18,7 @@ export class Server {
 export class DefaultContentTypeInterceptor implements HttpInterceptor {
 
     constructor(private router: Router,
-                private securityContext: SecurityContextHolder,
+                private userHolder: UserHolder,
                 private snackBar: MdSnackBar) {
     }
 
@@ -35,7 +35,7 @@ export class DefaultContentTypeInterceptor implements HttpInterceptor {
             if (err instanceof HttpErrorResponse) {
                 if (err.status === 401) {
                     console.log("UNAUTHORIZED");
-                    this.securityContext.clearAuthentication();
+                    this.userHolder.clearUser();
                     const snackBarRef = this.snackBar.open(err.url.endsWith("/auth")
                         ? "Incorrect credentials. Try again."
                         : "You've been logged out due to inactivity",

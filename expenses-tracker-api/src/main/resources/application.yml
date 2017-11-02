@@ -4,9 +4,13 @@ server:
 zuul:
   ignoredServices: '*'
   routes:
-    expenses-tracker-auth: /api/auth/**
-    expenses-tracker-service: /api/expenses**
-    # redirect root to ui (or /ui)
+    expenses-tracker-auth:
+      path: /api/auth/**
+      sensitive-headers:
+    expenses-tracker-service:
+      path: /api/expenses**
+      sensitive-headers:
+  add-proxy-headers: true
 
 eureka:
   instance:
@@ -47,6 +51,7 @@ security:
     resource:
       jwt:
         keyUri: ${services.auth.baseUrl}/oauth/token_key
+  sessions: always
 
 logging:
   level:

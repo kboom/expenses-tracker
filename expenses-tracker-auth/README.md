@@ -27,3 +27,4 @@ keytool -genkeypair -alias jwt -keyalg RSA -dname "CN=jwt, L=Lugano, S=Lugano, C
 * [Securing with private OAuth server](http://www.swisspush.org/security/2016/10/17/oauth2-in-depth-introduction-for-enterprises)
 * [Spring OAuth Guide](https://spring.io/guides/tutorials/spring-boot-oauth2/#_social_login_authserver)
 * [More implementation details](https://stackoverflow.com/questions/26056780/spring-security-oauth2-google-web-app-in-redirect-loop)
+* [Logging in from SPA -> OAuth2 flow](https://dzone.com/articles/sso-oauth2-angular-js-and)

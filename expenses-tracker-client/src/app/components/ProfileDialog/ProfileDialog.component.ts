@@ -1,16 +1,16 @@
 import {Component, Inject, OnInit} from "@angular/core";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MD_DIALOG_DATA, MdDialogRef, MdSnackBar} from "@angular/material";
-import {SecurityService} from "../../+security/security.service";
+import {SecurityService} from "../../+user/security.service";
 import {omit, pick } from "lodash-es";
 import {validatorFor} from "../../validators/common.validators";
 import {
-    EMAIL_REGEX, USERNAME_REGEX, PASSWORD_REGEX, LAST_NAME_REGEX,
+    LAST_NAME_REGEX,
     FIRST_NAME_REGEX
 } from "../../validators/validation.rules";
 import {Entity} from "../../models/hateoas/Entity.model";
 import {UserModel} from "../../models/User.model";
-import {UserProfile} from "../../models/UserProfile.model";
+import {UserService} from "../../+user/user.service";
 
 @Component({
     selector: 'profile-dialog',
@@ -23,11 +23,11 @@ import {UserProfile} from "../../models/UserProfile.model";
             <md-dialog-content fxLayout='column'>
 
                 <md-input-container>
-                    <input mdInput disabled type="text" placeholder="Username" [value]="userProfileEntity.entity.username">
+                    <input mdInput disabled type="text" placeholder="Username" [value]="userEntity.entity.username">
                 </md-input-container>
 
                 <md-input-container>
-                    <input mdInput disabled type="email" placeholder="E-mail" [value]="userProfileEntity.entity.email">
+                    <input mdInput disabled type="email" placeholder="E-mail" [value]="userEntity.entity.email">
                 </md-input-container>
 
                 <form id="profileForm" [formGroup]="profileForm" fxLayout='column'
@@ -64,10 +64,10 @@ export class ProfileDialog implements OnInit {
 
     profileForm: FormGroup;
 
-    constructor(@Inject(MD_DIALOG_DATA) public userProfileEntity: Entity<UserProfile>,
+    constructor(@Inject(MD_DIALOG_DATA) public userEntity: Entity<UserModel>,
                 private fb: FormBuilder,
                 private dialogRef: MdDialogRef<ProfileDialog>,
-                private authService: SecurityService,
+                private userService: UserService,
                 private snackBar: MdSnackBar) {
         this.profileForm = this.fb.group({
             firstName: ["", Validators.required, validatorFor(FIRST_NAME_REGEX)],
@@ -76,16 +76,16 @@ export class ProfileDialog implements OnInit {
     }
 
     ngOnInit(): void {
-        this.setValues(this.userProfileEntity);
+        this.setValues(this.userEntity);
     }
 
-    setValues = (userProfileEntity: Entity<UserProfile>) => {
+    setValues = (userProfileEntity: Entity<UserModel>) => {
         this.profileForm.setValue(pick(userProfileEntity.entity, ['firstName', 'lastName']));
     };
 
     doRegister(event): void {
         const formData = this.profileForm.value;
-        this.authService.updateProfile(this.userProfileEntity.withUpdatedEntity(formData))
+        this.userService.updateProfile(this.userEntity.withUpdatedEntity(formData))
             .subscribe((x) => {
                 const snackBarRef = this.snackBar.open("Your profile has been updated", "Close", {
                     duration: 5000,

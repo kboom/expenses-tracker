@@ -12,8 +12,8 @@ import {
 import {ISubscription} from "rxjs/Subscription";
 import {ActivatedRouteSnapshot, NavigationEnd, Router} from "@angular/router";
 import {RoleModelAware} from "../../models/Role.model";
-import {SecurityService} from "../../+security/security.service";
-import {SecurityContextHolder} from "../../+security/security.context";
+import {UserService} from "../../+user/user.service";
+import {UserHolder} from "../../+user/user.holder";
 
 @Component({
     selector: 'navbar',
@@ -28,12 +28,12 @@ import {SecurityContextHolder} from "../../+security/security.context";
                     Home
                 </a>
                 <a md-button [routerLink]=" ['./timezones'] "
-                   *ngIf="this.securityContext.getAuthentication().hasAnyRole(RoleModel.ROLE_USER, RoleModel.ROLE_ADMIN)"
+                   *ngIf="this.userHolder.getUser().hasAnyRole(RoleModel.ROLE_USER, RoleModel.ROLE_ADMIN)"
                    routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                     Timezones
                 </a>
                 <a md-button [routerLink]=" ['./users'] "
-                   *ngIf="this.securityContext.getAuthentication().hasAnyRole(RoleModel.ROLE_ADMIN, RoleModel.ROLE_MANAGER)"
+                   *ngIf="this.userHolder.getUser().hasAnyRole(RoleModel.ROLE_ADMIN, RoleModel.ROLE_MANAGER)"
                    routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                     Users
                 </a>
@@ -48,7 +48,7 @@ import {SecurityContextHolder} from "../../+security/security.context";
 
             </md-toolbar>
         </nav>
-    
+
     `
 })
 @RoleModelAware
@@ -61,8 +61,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     routerEventSubscription: ISubscription;
 
 
-    constructor(private readonly securityService: SecurityService,
-                private readonly securityContext: SecurityContextHolder,
+    constructor(private readonly userService: UserService,
+                private readonly userHolder: UserHolder,
                 private router: Router,
                 private componentFactoryResolver: ComponentFactoryResolver) {
     }

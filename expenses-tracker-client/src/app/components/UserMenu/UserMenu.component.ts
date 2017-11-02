@@ -1,16 +1,13 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
-import {SecurityService} from "../../+security/security.service";
+import {UserService} from "../../+user/user.service";
 import {Subscription} from "rxjs/Subscription";
 import {MdDialog, MdSnackBar} from "@angular/material";
-import {SignInDialogComponent} from "../SignInDialog/SignInDialog.component";
-import {SecurityContextHolder} from "../../+security/security.context";
+import {UserHolder} from "../../+user/user.holder";
 import {Observable} from "rxjs/Observable";
-import {RegistrationDialogComponent} from "../RegistrationDialog/RegistrationDialog.component";
 import {Router} from "@angular/router";
 import {UserRepository} from "../../repository/user.repository";
 import {ProfileDialog} from "../ProfileDialog/ProfileDialog.component";
 import {PasswordChangeDialog} from "../PasswordChangeDialog/PasswordChangeDialog.component";
-import {PasswordResetDialog} from "../PasswordResetDialog/PasswordResetDialog.component";
 import {EventBusService} from "../../services/eventBus.service";
 import {USER_CHANGED_EVENT} from "../../app.events";
 
@@ -19,7 +16,7 @@ import {USER_CHANGED_EVENT} from "../../app.events";
     template: `
 
         <div *ngIf="this.isLoggedIn$ | async; else signInBtn">
-            <button md-button [mdMenuTriggerFor]="menu">Hello, {{ this.securityContext.getAuthentication().getUsername()
+            <button md-button [mdMenuTriggerFor]="menu">Hello, {{ this.securityContext.getUser().getUsername()
                 }}!
             </button>
             <md-menu #menu="mdMenu">
@@ -30,8 +27,8 @@ import {USER_CHANGED_EVENT} from "../../app.events";
         </div>
 
         <ng-template #signInBtn>
-            <button md-button (click)="this.openSignInDialog()">Sign in</button>
-            <button md-button class="mat-primary" (click)="this.openRegistrationDialog()">Register</button>
+            <a md-button href="login">Sign in</a>
+            <a md-button class="mat-primary" href="api/auth/register">Register</a>
         </ng-template>
 
 
@@ -43,64 +40,41 @@ export class UserMenuComponent implements OnInit, OnDestroy {
 
     isLoggedIn$: Observable<Boolean>;
 
-    constructor(private authService: SecurityService,
+    constructor(private userService: UserService,
                 private userRepository: UserRepository,
-                private securityContext: SecurityContextHolder,
+                private userHolder: UserHolder,
                 private eventBusService: EventBusService,
                 private dialog: MdDialog,
                 private snackBar: MdSnackBar,
                 private router: Router) {
-        this.isLoggedIn$ = this.securityContext.getAuthentication$()
-            .map((authentication) => authentication.isAuthenticated())
+        this.isLoggedIn$ = this.userHolder.getUser$()
+            .map((user) => user.isKnown())
     }
 
     handleAuthenticationEvent(event) {
         console.log("Authentication event");
     }
 
-    openRegistrationDialog() {
-        this.dialog.open(RegistrationDialogComponent).afterClosed()
-            .subscribe(result => {
-
-            });
-    }
-
-    openSignInDialog() {
-        this.dialog.open(SignInDialogComponent).afterClosed()
-            .subscribe(result => {
-                if(result === "forgot") {
-                    this.dialog.open(PasswordResetDialog)
-                } else {
-                    this.router.navigate(['home']);
-                }
-            });
-    }
-
     changePassword() {
-        const username = this.securityContext.getAuthentication().getUsername();
-        this.userRepository.getUserByUsername(username).subscribe((userEntity) => {
-            this.dialog.open(PasswordChangeDialog, {
-                data: userEntity
-            }).afterClosed()
-                .subscribe(result => {
+        this.dialog.open(PasswordChangeDialog, {
+            data: this.userHolder.getUser()
+        }).afterClosed()
+            .subscribe(result => {
 
-                });
-        });
+            });
     }
 
     editProfile() {
-        this.authService.getProfile().subscribe((userProfile) => {
-            this.dialog.open(ProfileDialog, {
-                data: userProfile
-            }).afterClosed()
-                .subscribe(result => {
-                    this.eventBusService.publish(USER_CHANGED_EVENT);
-                });
-        });
+        this.dialog.open(ProfileDialog, {
+            data: this.userHolder.getUser()
+        }).afterClosed()
+            .subscribe(result => {
+                this.eventBusService.publish(USER_CHANGED_EVENT);
+            });
     }
 
     signOut() {
-        this.authService.signOut().subscribe(() => {
+        this.userService.signOut().subscribe(() => {
             this.router.navigate(['home']);
         }, () => {
             const snackBarRef = this.snackBar.open("Could not log out!", "Close", {
@@ -113,7 +87,7 @@ export class UserMenuComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        this.authService.getAuthenticationEvents$().subscribe(this.handleAuthenticationEvent)
+        this.userService.getAuthenticationEvents$().subscribe(this.handleAuthenticationEvent)
     }
 
     public ngOnDestroy() {

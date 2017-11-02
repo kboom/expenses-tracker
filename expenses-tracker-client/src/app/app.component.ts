@@ -3,9 +3,9 @@
  */
 import {Component, OnInit, ViewEncapsulation} from "@angular/core";
 import {AppState} from "./app.service";
-import {SecurityService} from "./+security/security.service";
 import {RoleModelAware} from "./models/Role.model";
-import {SecurityContextHolder} from "./+security/security.context";
+import {UserService} from "./+user/user.service";
+import {UserHolder} from "./+user/user.holder";
 
 /**
  * App Component
@@ -35,12 +35,13 @@ export class AppComponent implements OnInit {
 
     constructor(
         private appState: AppState,
-        private readonly securityService: SecurityService,
-        private readonly securityContext: SecurityContextHolder
+        private readonly userService: UserService,
+        private readonly securityContext: UserHolder
     ) {}
 
     public ngOnInit() {
         console.log('Initial App State', this.appState.state);
+        this.userService.tryFetchUser()
     }
 
 }

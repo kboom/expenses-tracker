@@ -4,11 +4,9 @@ import com.ggurgul.playground.extracker.auth.services.LocalUserDetailsService
 import com.ggurgul.playground.extracker.auth.services.UserPrincipal
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
-import org.springframework.core.Ordered
 import org.springframework.core.io.ClassPathResource
 import org.springframework.http.MediaType
 import org.springframework.security.authentication.AuthenticationManager
@@ -26,13 +24,8 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.cors.CorsConfiguration
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource
-import org.springframework.web.filter.CorsFilter
 import java.security.Principal
 import java.util.*
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 
 @Configuration
@@ -53,13 +46,9 @@ class AuthorizationServerConfig : AuthorizationServerConfigurerAdapter() {
      * This endpoint gets called whenever the user authenticates on a page having no redirect back link.
      */
     @RequestMapping(path = arrayOf("/user"), produces = arrayOf(MediaType.ALL_VALUE))
-    fun user(request: HttpServletRequest, response: HttpServletResponse, principal: Principal?): Principal? {
-//        val oldRequest = HttpSessionRequestCache().getRequest(request, response)
-//        if(oldRequest != null) {
-//            val oldRedirectUrl = oldRequest.redirectUrl
-//            DefaultRedirectStrategy().sendRedirect(request, response, oldRedirectUrl) // all those should be in authentication success handler for basic auth
-//        }
-        return (principal as OAuth2Authentication).userAuthentication.principal as UserPrincipal
+    fun user(principal: Principal?): Principal? {
+//        return (principal as OAuth2Authentication).userAuthentication.principal as UserPrincipal
+        return principal
     }
 
     // should have login form
@@ -77,7 +66,7 @@ class AuthorizationServerConfig : AuthorizationServerConfigurerAdapter() {
                 .authorizedGrantTypes("client_credentials", "password", "authorization_code", "refresh_token")
                 .accessTokenValiditySeconds(3600)
                 .refreshTokenValiditySeconds(2592000)
-                .redirectUris("http://localhost:9999/login") // todo get rid of hardcoded values
+                .redirectUris("http://localhost:9991") // todo get rid of hardcoded values
                 .scopes("read", "write")
                 .autoApprove(".*")
 
@@ -88,7 +77,7 @@ class AuthorizationServerConfig : AuthorizationServerConfigurerAdapter() {
                 .authorizedGrantTypes("client_credentials", "password", "authorization_code", "refresh_token")
                 .accessTokenValiditySeconds(3600)
                 .refreshTokenValiditySeconds(2592000)
-                .redirectUris("http://localhost:9995/login") // todo get rid of hardcoded values
+                .redirectUris("http://localhost:9995", "http://localhost:3000") // todo get rid of hardcoded values
                 .scopes("read", "write")
                 .autoApprove(".*")
     }

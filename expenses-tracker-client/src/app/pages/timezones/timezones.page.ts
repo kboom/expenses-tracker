@@ -6,7 +6,7 @@ import "rxjs/add/observable/merge";
 import "rxjs/add/operator/map";
 import "rxjs/add/observable/combineLatest";
 import {ActivatedRoute, ActivatedRouteSnapshot, CanActivate, Resolve, RouterStateSnapshot} from "@angular/router";
-import {SecurityContextHolder} from "../../+security/security.context";
+import {UserHolder} from "../../+user/user.holder";
 import {RoleModel} from "../../models/Role.model";
 import {TimezonesRepository} from "../../repository/timezones.repository";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
@@ -213,11 +213,11 @@ export class TimezonesResolver implements Resolve<any> {
 @Injectable()
 export class CanActivateTimezones implements CanActivate {
 
-    constructor(private authContextHolder: SecurityContextHolder) {
+    constructor(private authContextHolder: UserHolder) {
     }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-        return this.authContextHolder.getAuthentication().hasAnyRole(RoleModel.ROLE_USER, RoleModel.ROLE_ADMIN)
+        return this.authContextHolder.getUser().hasAnyRole(RoleModel.ROLE_USER, RoleModel.ROLE_ADMIN)
     }
 
 }

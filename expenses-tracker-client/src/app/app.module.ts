@@ -32,7 +32,7 @@ import {
  */
 // modules
 import {ServerModule} from "./+server";
-import {SecurityModule} from "./+security";
+import {SecurityModule} from "./+user";
 
 import {ENV_PROVIDERS} from "./environment";
 import {ROUTES} from "./app.routes";
@@ -46,23 +46,20 @@ import {AppState, InternalStateType} from "./app.service";
 import {HomeComponent} from "./pages/home";
 import {AboutComponent} from "./pages/about";
 import {UsersComponent} from "./pages/users/users.component";
-import {RegistrationComponent} from "./pages/registration";
 import {NoContentComponent} from "./pages/no-content";
 import {XLargeDirective} from "./pages/home/x-large";
 import {UserMenuComponent} from "./components/UserMenu";
 import {SignInDialogComponent} from "./components/SignInDialog";
 import {UserDetailsDialogComponent} from "./components/UserDetailsDialog";
-import {SecurityService} from "./+security/security.service";
-import {ResponseMappingService} from "./+security/responseMapping.service";
-import {SecurityContextHolder} from "./+security/security.context";
+import {UserService} from "./+user/user.service";
+import {UserHolder} from "./+user/user.holder";
 import {UsersTableComponent} from "./components/UsersTable/UsersTable.component";
 import {UserRepository} from "./repository/user.repository";
-import {TimezoneFactory, UserFactory, UserProfileFactory} from "./models/factory";
+import {TimezoneFactory, UserFactory} from "./models/factory";
 import {ControlMessagesComponent} from "./components/ControlMessages/ControlMessages.component";
 import {ConfirmationDialogComponent} from "./components/ConfirmationDialog";
 import {UserDetailsFormComponent} from "./components/UserDetailsForm/UserDetailsForm.component";
 import {CreateUserDialogComponent} from "./components/CreateUserDialog/CreateUserDialog.component";
-import {RegistrationDialogComponent} from "./components/RegistrationDialog/RegistrationDialog.component";
 import {ValidationMessageProvider} from "./validators/validation.messages";
 import {TimezonesRepository} from "./repository/timezones.repository";
 import {
@@ -79,23 +76,18 @@ import {CreateTimezoneDialogComponent} from "./components/CreateTimezoneDialog/C
 import {NavbarComponent} from "./components/Navbar/Navbar.component";
 import {ProfileDialog} from "./components/ProfileDialog/ProfileDialog.component";
 import {PasswordChangeDialog} from "./components/PasswordChangeDialog/PasswordChangeDialog.component";
-import {PasswordResetDialog} from "./components/PasswordResetDialog/PasswordResetDialog.component";
-import {SetNewPasswordForm} from "./components/SetNewPasswordForm/SetNewPassword.form";
-import {PasswordResetPage} from "./pages/password-reset/password-reset.component";
 import {AnalogClockComponent} from "./components/AnalogClock/AnalogClock.component";
 import {EventBusService} from "./services/eventBus.service";
 
 // Application wide providers
 const APP_PROVIDERS = [
-    SecurityService,
-    ResponseMappingService,
-    SecurityContextHolder,
+    UserService,
+    UserHolder,
     ValidationMessageProvider,
     UserRepository,
     UserFactory,
     TimezonesRepository,
     TimezoneFactory,
-    UserProfileFactory,
     CanActivateTimezones,
     TimezonesResolver,
     TimezonesToolbarComponent,
@@ -122,17 +114,12 @@ type StoreType = {
         HomeComponent,
         UsersComponent,
         TimezonesPage,
-        PasswordResetPage,
         TimezoneComponent,
-        RegistrationComponent,
         NoContentComponent,
         XLargeDirective,
         UserMenuComponent,
-        SignInDialogComponent,
-        PasswordResetDialog,
         UserDetailsDialogComponent,
         CreateTimezoneDialogComponent,
-        SetNewPasswordForm,
         UsersTableComponent,
         ControlMessagesComponent,
         ConfirmationDialogComponent,
@@ -140,7 +127,6 @@ type StoreType = {
         UserDetailsFormComponent,
         TimezoneForm,
         CreateUserDialogComponent,
-        RegistrationDialogComponent,
         NavbarComponent,
         TimezonesToolbarComponent,
         ProfileDialog,
@@ -184,17 +170,14 @@ type StoreType = {
     ],
 
     entryComponents: [
-        SignInDialogComponent,
         UserDetailsDialogComponent,
         ConfirmationDialogComponent,
         CreateUserDialogComponent,
-        RegistrationDialogComponent,
         EditTimezoneDialogComponent,
         CreateTimezoneDialogComponent,
         TimezonesToolbarComponent,
         ProfileDialog,
-        PasswordChangeDialog,
-        PasswordResetDialog
+        PasswordChangeDialog
     ],
 
     /**
