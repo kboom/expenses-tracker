@@ -57,11 +57,7 @@ class AuthorizationServerConfig : AuthorizationServerConfigurerAdapter() {
 //            val oldRedirectUrl = oldRequest.redirectUrl
 //            DefaultRedirectStrategy().sendRedirect(request, response, oldRedirectUrl) // all those should be in authentication success handler for basic auth
 //        }
-
-//        return (principal as OAuth2Authentication).userAuthentication.principal as UserPrincipal
-return null
-
-//        val savedRequest = session.getAttribute("SPRING_SECURITY_SAVED_REQUEST") as SavedRequest
+        return (principal as OAuth2Authentication).userAuthentication.principal as UserPrincipal
     }
 
     // should have login form

@@ -11,6 +11,10 @@ const webpackMerge = require('webpack-merge');
  * The settings that are common to prod and dev
 */
 const commonConfig = require('./webpack.common.js');
+/**
+ * Package definition settings to load versions and so forth from
+ */
+const packageJSON = require('../package.json');
 
 /**
  * Webpack Plugins
@@ -65,7 +69,7 @@ module.exports = function (env) {
        *
        * See: http://webpack.github.io/docs/configuration.html#output-path
        */
-      path: helpers.root('dist'),
+      path: helpers.root('target', 'classes', 'META-INF', 'resources', 'webjars', packageJSON.name, packageJSON.version),
 
       /**
        * Specifies the name of each output file on disk.
