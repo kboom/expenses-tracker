@@ -4,9 +4,11 @@ import com.ggurgul.playground.extracker.auth.services.LocalUserDetailsService
 import com.ggurgul.playground.extracker.auth.services.UserPrincipal
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
+import org.springframework.core.Ordered
 import org.springframework.core.io.ClassPathResource
 import org.springframework.http.MediaType
 import org.springframework.security.authentication.AuthenticationManager
@@ -22,11 +24,11 @@ import org.springframework.security.oauth2.provider.token.*
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory
-import org.springframework.security.web.DefaultRedirectStrategy
-import org.springframework.security.web.savedrequest.HttpSessionRequestCache
-import org.springframework.security.web.savedrequest.SavedRequest
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import org.springframework.web.filter.CorsFilter
 import java.security.Principal
 import java.util.*
 import javax.servlet.http.HttpServletRequest
@@ -136,6 +138,7 @@ class AuthorizationServerConfig : AuthorizationServerConfigurerAdapter() {
         }
         return converter;
     }
+
 
     class CustomTokenEnhancer : TokenEnhancer {
 

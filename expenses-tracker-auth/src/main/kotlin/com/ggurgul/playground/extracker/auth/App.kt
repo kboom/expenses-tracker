@@ -3,9 +3,11 @@ package com.ggurgul.playground.extracker.auth
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.Ordered
 import org.springframework.data.repository.query.spi.EvaluationContextExtension
 import org.springframework.data.repository.query.spi.EvaluationContextExtensionSupport
 import org.springframework.http.MediaType
@@ -15,6 +17,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl
 import org.springframework.security.access.expression.SecurityExpressionRoot
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
@@ -80,19 +83,21 @@ class App {
 
     @Bean
     fun corsFilter(): CorsFilter {
-        val source = UrlBasedCorsConfigurationSource()
-        val config = CorsConfiguration()
-        config.allowCredentials = true
-        config.addAllowedOrigin("*")
-        config.addAllowedHeader("*")
-        config.addAllowedMethod("OPTIONS")
-        config.addAllowedMethod("GET")
-        config.addAllowedMethod("POST")
-        config.addAllowedMethod("PATCH")
-        config.addAllowedMethod("PUT")
-        config.addAllowedMethod("DELETE")
-        source.registerCorsConfiguration("/**", config)
+        val source = UrlBasedCorsConfigurationSource();
+        val config = CorsConfiguration();
+        config.allowCredentials = true;
+        config.addAllowedOrigin("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
         return CorsFilter(source)
+    }
+
+    @Bean
+    fun registerCorsFilter(filter: CorsFilter): FilterRegistrationBean {
+        val reg = FilterRegistrationBean(filter)
+        reg.order = Ordered.HIGHEST_PRECEDENCE
+        return reg
     }
 
     internal inner class SecurityEvaluationContextExtension : EvaluationContextExtensionSupport() {

@@ -32,6 +32,7 @@ import org.springframework.security.oauth2.client.token.grant.code.Authorization
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.filter.CompositeFilter
 import java.util.*
 import javax.servlet.Filter
