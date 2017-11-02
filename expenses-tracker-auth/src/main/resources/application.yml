@@ -19,7 +19,7 @@ eureka:
 security:
  oauth2:
    resource:
-     userInfoUri: http://localhost:9998/user
+     userInfoUri: http://localhost:9998/api/users/me
 
 facebook:
   client:

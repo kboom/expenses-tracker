@@ -1,4 +1,4 @@
-package com.ggurgul.playground.extracker.auth.controllers.dto
+package com.ggurgul.playground.extracker.auth.controllers.resources
 
 import java.io.Serializable
 

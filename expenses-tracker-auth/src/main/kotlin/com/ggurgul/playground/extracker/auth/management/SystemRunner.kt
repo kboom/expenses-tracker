@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component
 @Component
 class SystemRunner {
 
+    @Throws(Exception::class)
     fun <T> runInSystemContext(action: () -> T) : T {
         val currentAuthentication = SecurityContextHolder.getContext().authentication
 

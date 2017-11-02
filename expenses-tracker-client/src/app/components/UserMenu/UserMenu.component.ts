@@ -16,8 +16,7 @@ import {USER_CHANGED_EVENT} from "../../app.events";
     template: `
 
         <div *ngIf="this.isLoggedIn$ | async; else signInBtn">
-            <button md-button [mdMenuTriggerFor]="menu">Hello, {{ this.securityContext.getUser().getUsername()
-                }}!
+            <button md-button [mdMenuTriggerFor]="menu">Hello, {{ this.userHolder.getUser().entity.username }}!
             </button>
             <md-menu #menu="mdMenu">
                 <button md-menu-item (click)="editProfile()">Edit profile</button>
@@ -40,15 +39,17 @@ export class UserMenuComponent implements OnInit, OnDestroy {
 
     isLoggedIn$: Observable<Boolean>;
 
-    constructor(private userService: UserService,
-                private userRepository: UserRepository,
-                private userHolder: UserHolder,
-                private eventBusService: EventBusService,
-                private dialog: MdDialog,
-                private snackBar: MdSnackBar,
-                private router: Router) {
+    constructor(private readonly userService: UserService,
+                private readonly userRepository: UserRepository,
+                private readonly userHolder: UserHolder,
+                private readonly eventBusService: EventBusService,
+                private readonly dialog: MdDialog,
+                private readonly snackBar: MdSnackBar,
+                private readonly router: Router) {
         this.isLoggedIn$ = this.userHolder.getUser$()
-            .map((user) => user.isKnown())
+            .map((user) => {
+                return user.entity.isKnown();
+            })
     }
 
     handleAuthenticationEvent(event) {

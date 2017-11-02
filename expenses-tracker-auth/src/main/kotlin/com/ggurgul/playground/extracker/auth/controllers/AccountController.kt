@@ -1,8 +1,8 @@
 package com.ggurgul.playground.extracker.auth.controllers
 
-import com.ggurgul.playground.extracker.auth.controllers.dto.PasswordChangeRequest
-import com.ggurgul.playground.extracker.auth.controllers.dto.PasswordResetRequest
-import com.ggurgul.playground.extracker.auth.controllers.dto.SetNewPasswordRequest
+import com.ggurgul.playground.extracker.auth.controllers.resources.PasswordChangeRequest
+import com.ggurgul.playground.extracker.auth.controllers.resources.PasswordResetRequest
+import com.ggurgul.playground.extracker.auth.controllers.resources.SetNewPasswordRequest
 import com.ggurgul.playground.extracker.auth.management.SystemRunner
 import com.ggurgul.playground.extracker.auth.services.UserService
 import com.ggurgul.playground.extracker.auth.exceptions.UserNotFoundException

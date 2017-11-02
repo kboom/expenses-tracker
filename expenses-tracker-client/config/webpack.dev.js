@@ -237,6 +237,12 @@ module.exports = function (options) {
               // <a href="https://github.com/nodejitsu/node-http-proxy">node-http-proxy</a> option - don't add /localhost:8080/ to proxied request paths
               prependPath: true
           },
+          '/logout': {
+              target: 'http://localhost:9995',
+              secure: true,
+              // <a href="https://github.com/nodejitsu/node-http-proxy">node-http-proxy</a> option - don't add /localhost:8080/ to proxied request paths
+              prependPath: true
+          },
           '/api/**': {
               target: 'http://localhost:9995/api',
               secure: true,

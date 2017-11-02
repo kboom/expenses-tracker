@@ -28,12 +28,12 @@ import {UserHolder} from "../../+user/user.holder";
                     Home
                 </a>
                 <a md-button [routerLink]=" ['./timezones'] "
-                   *ngIf="this.userHolder.getUser().hasAnyRole(RoleModel.ROLE_USER, RoleModel.ROLE_ADMIN)"
+                   *ngIf="this.userHolder.getUser().entity.hasAnyRole(RoleModel.ROLE_USER, RoleModel.ROLE_ADMIN)"
                    routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                     Timezones
                 </a>
                 <a md-button [routerLink]=" ['./users'] "
-                   *ngIf="this.userHolder.getUser().hasAnyRole(RoleModel.ROLE_ADMIN, RoleModel.ROLE_MANAGER)"
+                   *ngIf="this.userHolder.getUser().entity.hasAnyRole(RoleModel.ROLE_ADMIN, RoleModel.ROLE_MANAGER)"
                    routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                     Users
                 </a>

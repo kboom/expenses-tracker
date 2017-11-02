@@ -1,4 +1,4 @@
-package com.ggurgul.playground.extracker.auth.controllers.dto
+package com.ggurgul.playground.extracker.auth.controllers.resources
 
 import org.hibernate.validator.constraints.Length
 import java.io.Serializable

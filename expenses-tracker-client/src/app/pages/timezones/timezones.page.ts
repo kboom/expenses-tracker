@@ -217,7 +217,7 @@ export class CanActivateTimezones implements CanActivate {
     }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-        return this.authContextHolder.getUser().hasAnyRole(RoleModel.ROLE_USER, RoleModel.ROLE_ADMIN)
+        return this.authContextHolder.getUser().entity.hasAnyRole(RoleModel.ROLE_USER, RoleModel.ROLE_ADMIN)
     }
 
 }

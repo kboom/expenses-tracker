@@ -1,7 +1,7 @@
 package com.ggurgul.playground.extracker.auth.controllers
 
-import com.ggurgul.playground.extracker.auth.controllers.dto.RegistrationConfirmationRequest
-import com.ggurgul.playground.extracker.auth.controllers.dto.RegistrationRequest
+import com.ggurgul.playground.extracker.auth.controllers.resources.RegistrationConfirmationRequest
+import com.ggurgul.playground.extracker.auth.controllers.resources.RegistrationRequest
 import com.ggurgul.playground.extracker.auth.management.SystemRunner
 import com.ggurgul.playground.extracker.auth.models.AuthorityName
 import com.ggurgul.playground.extracker.auth.models.User

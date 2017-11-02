@@ -6,11 +6,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer
+import org.springframework.web.bind.annotation.RestController
 
 @Configuration
 @EnableResourceServer
+@RestController
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 class ResourceServerConfig : ResourceServerConfigurerAdapter() {
+
 
     @Throws(Exception::class)
     override fun configure(resources: ResourceServerSecurityConfigurer?) {
@@ -22,7 +25,7 @@ class ResourceServerConfig : ResourceServerConfigurerAdapter() {
      */
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
-        http.antMatcher("/auth/**")
+        http.antMatcher("/users/**")
                 .authorizeRequests()
                 .anyRequest()
                 .authenticated()

@@ -48,13 +48,15 @@ export class UserService {
     }
 
     public signOut() {
-        return this.http.get("api/logout");
+        const logout$ = this.http.post("logout", {});
+        logout$.subscribe(() => this.userHolder.clearUser());
+        return logout$;
     }
 
     private fetchUser(): Observable<any> {
-        return this.http.get("api/auth/user")
+        return this.http.get("api/auth/users/me")
             .map((body: any) => this.userFactory.constructEntity(body))
-            .catch(() => Observable.of(UserModel.unknownUser()));
+            .catch(() => Observable.of(this.userFactory.constructEntity(UserModel.unknownUser())));
     }
 
     updateProfile(entity: Entity<UserModel>): Observable<any> {

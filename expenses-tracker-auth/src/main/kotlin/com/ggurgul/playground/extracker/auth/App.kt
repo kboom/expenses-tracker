@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
 import org.springframework.data.repository.query.spi.EvaluationContextExtension
 import org.springframework.data.repository.query.spi.EvaluationContextExtensionSupport
+import org.springframework.hateoas.config.EnableEntityLinks
 import org.springframework.http.MediaType
 import org.springframework.mail.MailSender
 import org.springframework.mail.SimpleMailMessage
@@ -32,6 +33,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  */
 @SpringBootApplication
 @EnableEurekaClient
+@EnableEntityLinks
 class App {
 
     @Bean

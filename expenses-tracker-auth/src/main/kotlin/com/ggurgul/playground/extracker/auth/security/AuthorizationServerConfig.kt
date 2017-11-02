@@ -30,7 +30,6 @@ import java.util.*
 
 @Configuration
 @EnableAuthorizationServer
-@RestController
 class AuthorizationServerConfig : AuthorizationServerConfigurerAdapter() {
 
     @Autowired
@@ -41,15 +40,6 @@ class AuthorizationServerConfig : AuthorizationServerConfigurerAdapter() {
 
     @Value("\${keystore.password}")
     private val pwd: String? = null
-
-    /**
-     * This endpoint gets called whenever the user authenticates on a page having no redirect back link.
-     */
-    @RequestMapping(path = arrayOf("/user"), produces = arrayOf(MediaType.ALL_VALUE))
-    fun user(principal: Principal?): Principal? {
-//        return (principal as OAuth2Authentication).userAuthentication.principal as UserPrincipal
-        return principal
-    }
 
     // should have login form
 
@@ -132,7 +122,7 @@ class AuthorizationServerConfig : AuthorizationServerConfigurerAdapter() {
     class CustomTokenEnhancer : TokenEnhancer {
 
         override fun enhance(accessToken: OAuth2AccessToken, authentication: OAuth2Authentication): OAuth2AccessToken {
-            val additionalInfo = HashMap<String, Any>()
+            val additionalInfo = HashMap<String, Any?>()
             val authenticatedUser = (authentication.principal as UserPrincipal)
             additionalInfo.put("email", authenticatedUser.getEmail())
             (accessToken as DefaultOAuth2AccessToken).additionalInformation = additionalInfo
