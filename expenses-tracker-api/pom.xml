@@ -36,6 +36,11 @@
             </dependency>
             <dependency>
                 <groupId>com.ggurgul.playground.extracker</groupId>
+                <artifactId>expenses-tracker-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ggurgul.playground.extracker</groupId>
                 <artifactId>expenses-tracker-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -158,6 +163,26 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>integrate-client</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.ggurgul.playground.extracker</groupId>
+                                    <artifactId>expenses-tracker-client</artifactId>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <includes>META-INF/resources/webjars/expenses-tracker-ui/6.0.0/**/*.*</includes>
+                                    <outputDirectory>target/ui/</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>place-jar-in-docker</id>
                         <phase>package</phase>
                         <goals>
                             <goal>copy</goal>

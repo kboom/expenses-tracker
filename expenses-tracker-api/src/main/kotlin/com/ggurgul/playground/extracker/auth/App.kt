@@ -17,6 +17,9 @@ import org.springframework.web.filter.CorsFilter
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry
+
+
 
 
 
@@ -62,16 +65,26 @@ class App {
     @Configuration
     class WebMvcConfig : WebMvcConfigurerAdapter() {
 
-        override fun addResourceHandlers(registry: ResourceHandlerRegistry?) {
+        override fun addViewControllers(registry: ViewControllerRegistry) {
+//            registry.addViewController("/assets/**").setViewName("forward:/webjars/expenses-tracker-ui/6.0.0/assets")
+//            registry.addViewController("/static/**").setViewName("forward:/webjars/expenses-tracker-ui/6.0.0/static")
+            registry.addViewController("/").setViewName("forward:/index.html")
+        }
+
+        override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
             super.addResourceHandlers(registry)
-            if (!registry!!.hasMappingForPattern("/webjars/**")) {
+            if (!registry.hasMappingForPattern("/webjars/**")) {
                 registry.addResourceHandler("/webjars/**")
                         .addResourceLocations("classpath:/META-INF/resources/webjars/")
             }
             if (!registry.hasMappingForPattern("/**")) {
                 registry.addResourceHandler("/**")
-                        .addResourceLocations(*CLASSPATH_RESOURCE_LOCATIONS)
+                        .addResourceLocations("classpath:/META-INF/resources/webjars/expenses-tracker-ui/6.0.0/")
             }
+//            if (!registry.hasMappingForPattern("/**")) {
+//                registry.addResourceHandler("/**")
+//                        .addResourceLocations(*CLASSPATH_RESOURCE_LOCATIONS)
+//            }
         }
 
     }
@@ -83,7 +96,7 @@ class App {
             http
                     .antMatcher("/**")
                     .authorizeRequests()
-                    .antMatchers("/", "/webjars/**")
+                    .antMatchers("/", "/static/**", "/assets/**", "/webjars/**")
                     .permitAll()
                     .anyRequest()
                     .authenticated()

@@ -77,7 +77,7 @@ module.exports = function (env) {
        *
        * See: http://webpack.github.io/docs/configuration.html#output-filename
        */
-      filename: '[name].[chunkhash].bundle.js',
+      filename: 'static/[name].[chunkhash].bundle.js',
 
       /**
        * The filename of the SourceMaps for the JavaScript files.
@@ -93,7 +93,7 @@ module.exports = function (env) {
        *
        * See: http://webpack.github.io/docs/configuration.html#output-chunkfilename
        */
-      chunkFilename: '[name].[chunkhash].chunk.js'
+      chunkFilename: 'static/[name].[chunkhash].chunk.js'
 
     },
 
@@ -152,7 +152,7 @@ module.exports = function (env) {
        *
        * See: https://github.com/webpack/extract-text-webpack-plugin
        */
-      new ExtractTextPlugin('[name].[contenthash].css'),
+      new ExtractTextPlugin('static/[name].[contenthash].css'), // todo this setting causes sourcemap of css to be under static/static
 
       /**
        * Plugin: DefinePlugin
