@@ -38,12 +38,12 @@ export class SecurityService {
     }
 
     public registerAccount({username, password, email}): Observable<any> {
-        return this.http.post("http://localhost:8080/api/registration", JSON.stringify({username, password, email}))
+        return this.http.post("api/registration", JSON.stringify({username, password, email}))
             .catch((error: any) => Observable.throw(error));
     }
 
     public confirmAccount(confirmationCode): Observable<any> {
-        return this.http.post("http://localhost:8080/api/registration/confirmation", JSON.stringify({code: confirmationCode}))
+        return this.http.post("api/registration/confirmation", JSON.stringify({code: confirmationCode}))
             .catch((error: any) => Observable.throw(error));
     }
 
@@ -57,18 +57,18 @@ export class SecurityService {
     }
 
     public changePassword({oldPassword, newPassword}) {
-        return this.http.post("http://localhost:8080/api/account/password", JSON.stringify({oldPassword, newPassword}))
+        return this.http.post("api/account/password", JSON.stringify({oldPassword, newPassword}))
             .catch((error: any) => Observable.throw(error));
     }
 
     public getProfile(): Observable<Entity<UserProfile>> {
-        return this.http.get("http://localhost:8080/api/account")
+        return this.http.get("api/account")
             .map((body: any) => this.userProfileFactory.constructEntity(body))
             .catch(() => Observable.throw("Could not get profile"));
     }
 
     public updateProfile(entity: Entity<UserProfile>): Observable<any> {
-        return this.http.put("http://localhost:8080/api/account", entity.entity);
+        return this.http.put("api/account", entity.entity);
     }
 
     public signOut() {
@@ -77,19 +77,19 @@ export class SecurityService {
     }
 
     private doAuthenticate(username, password): Observable<any> {
-        return this.http.post("http://localhost:8080/api/auth", JSON.stringify({username, password}))
+        return this.http.post("api/auth", JSON.stringify({username, password}))
             .map((response: any) => this.responseMapper.mapIntoTokenCodes(response))
             .map(AuthenticationModel.authenticated)
             .catch((error: any) => Observable.throw(error));
     }
 
     public resetPassword(details: any): Observable<any> {
-        return this.http.post("http://localhost:8080/api/account/password/reset", details)
+        return this.http.post("api/account/password/reset", details)
             .catch((error: any) => Observable.throw(error));
     }
 
     public setNewPasswordAfterReset(newPassword: string, code: string): Observable<any> {
-        return this.http.post("http://localhost:8080/api/account/password/reset/confirmation", JSON.stringify({newPassword, code}))
+        return this.http.post("api/account/password/reset/confirmation", JSON.stringify({newPassword, code}))
             .catch((error: any) => Observable.throw(error));
     }
 

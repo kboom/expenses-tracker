@@ -11,8 +11,8 @@ import {TimezoneModel} from "src/app/models/Timezone.model";
 import {TimezoneFactory} from "../models/factory/index";
 import {Entity} from "../models/hateoas/Entity.model";
 
-const getAllTimezonesUrl = "http://localhost:8080/api/timezones?projection=withDetails";
-const postTimezoneURL = "http://localhost:8080/api/timezones";
+const getAllTimezonesUrl = "api/timezones?projection=withDetails";
+const postTimezoneURL = "api/timezones";
 
 @Injectable()
 export class TimezonesRepository {

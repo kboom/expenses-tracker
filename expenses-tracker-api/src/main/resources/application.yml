@@ -4,8 +4,8 @@ server:
 zuul:
   ignoredServices: '*'
   routes:
-    expenses-tracker-auth: /auth/**
-    expenses-tracker-service: /expenses/api/**
+    expenses-tracker-auth: /api/auth/**
+    expenses-tracker-service: /api/expenses**
     # redirect root to ui (or /ui)
 
 eureka:

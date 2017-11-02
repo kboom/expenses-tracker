@@ -230,6 +230,14 @@ module.exports = function (options) {
         // poll: 1000,
         ignored: /node_modules/
       },
+      proxy: {
+          '/api/**': {
+              target: 'http://localhost:9995/api',
+              secure: true,
+              // <a href="https://github.com/nodejitsu/node-http-proxy">node-http-proxy</a> option - don't add /localhost:8080/ to proxied request paths
+              prependPath: false
+          },
+      },
       /**
       * Here you can access the Express app object and add your own custom middleware to it.
       *

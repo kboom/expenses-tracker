@@ -12,9 +12,9 @@ import {Entity} from "../models/hateoas/Entity.model";
 import {extend, omit, transform} from "lodash-es";
 import {UserFactory} from "../models/factory";
 
-const getAllUsersURL = "http://localhost:8080/api/users?projection=withDetails";
-const postUserURL = "http://localhost:8080/api/users";
-const getUserByUsernameURL = "http://localhost:8080/api/users/search/findByUsername?projections=withDetails";
+const getAllUsersURL = "api/users?projection=withDetails";
+const postUserURL = "api/users";
+const getUserByUsernameURL = "api/users/search/findByUsername?projections=withDetails";
 
 @Injectable()
 export class UserRepository {
@@ -51,7 +51,7 @@ export class UserRepository {
     }
 
     private constructRoleURIsFor(userEntity: Entity<UserModel>) {
-        const basePath = "http://localhost:8080/api/authorities/:roleName";
+        const basePath = "api/authorities/:roleName";
         return userEntity.entity.authorities.map((role) => basePath.replace(":roleName", RoleModel[role])).join("\n");
     }
 
