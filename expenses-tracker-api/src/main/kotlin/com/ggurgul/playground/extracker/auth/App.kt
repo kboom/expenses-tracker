@@ -85,7 +85,7 @@ class App : WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity) {
         http
                 .logout().logoutSuccessUrl("/").and()
-                .authorizeRequests().antMatchers("/", "/static/**", "/assets/**", "/webjars/**")
+                .authorizeRequests().antMatchers("/", "/logout", "/static/**", "/assets/**", "/webjars/**")
                 .permitAll().anyRequest().authenticated().and()
                 .csrf()
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
