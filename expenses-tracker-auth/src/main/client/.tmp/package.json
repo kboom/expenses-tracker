@@ -1,0 +1,33 @@
+{
+  "name": "auth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rimraf ../../../target/classes/static/",
+    "build": "npm run clean && webpack --progress --bail",
+    "build:dev": "rimraf ../../../target/classes/static/ && cross-env NODE_ENV=dev npm run build --",
+    "watch": "npm run build:dev -- --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "angular": "^1.5.0",
+    "angular-route": "^1.6.6"
+  },
+  "devDependencies": {
+    "babel-core": "^6.2.1",
+    "babel-loader": "^6.2.0",
+    "babel-preset-es2015": "^6.1.18",
+    "cross-env": "^5.1.1",
+    "css-loader": "0.26.1",
+    "extract-text-webpack-plugin": "2.0.0-beta.5",
+    "html-webpack-plugin": "^2.30.1",
+    "postcss-loader": "1.2.2",
+    "raw-loader": "^0.5.1",
+    "rimraf": "^2.6.2",
+    "style-loader": "^0.13.0",
+    "webpack": "^3.8.1"
+  }
+}

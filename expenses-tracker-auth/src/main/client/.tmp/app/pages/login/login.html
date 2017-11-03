@@ -1,0 +1,51 @@
+<div ng-controller="LoginController as ctrl">
+    <div class="container" ng-show="!ctrl.authenticated">
+
+        <div class="row">
+            <h1>Welcome to Expenses Tracker App!</h1>
+            <p>You can sign in using any of the options below.</p>
+        </div>
+        <div class="row" style="padding: 10px 0">
+            <div class="col-sm-12 col-md-6">
+                <div class="alert alert-danger" ng-show="error">
+                    There was a problem logging in. Please try again.
+                </div>
+                <form role="form" action="login" method="POST">
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text"
+                               class="form-control"
+                               id="username"
+                               name="username"
+                               ng-model="credentials.username"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password"
+                               class="form-control"
+                               id="password"
+                               name="password"
+                               ng-model="credentials.password"/>
+                    </div>
+                    <button type="submit" type="submit" class="btn btn-primary">Sign in with local account</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6" style="padding: 10px 0">
+            <span>Or via </span>
+            <a class="btn btn-default" href="/login/facebook" role="button">Facebook</a>
+            <a class="btn btn-default" href="/login/google" role="button">Google</a>
+            <a class="btn btn-default" href="/login/github" role="button">GitHub</a>
+        </div>
+    </div>
+    <div class="container" ng-show="ctrl.authenticated">
+        <div class="row">
+            <div class="col-md-12">
+                Logged in as: <span ng-bind="ctrl.user"></span>
+                <div>
+                    <button ng-click="ctrl.logout()" class="btn btn-primary">Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
