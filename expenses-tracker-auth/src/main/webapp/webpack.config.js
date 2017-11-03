@@ -5,7 +5,6 @@ var webpack = require('webpack');
 var autoprefixer = require('autoprefixer');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 /**
  * Env
@@ -16,18 +15,18 @@ module.exports = function makeWebpackConfig() {
 
     var config = {};
 
-    config.entry = isTest ? void 0 : {
+    config.entry = {
         app: './src/app.js'
     };
 
-    config.output = isTest ? {} : {
-        path: __dirname + '/dist',
-        publicPath: isProd ? '/' : 'http://localhost:8080/',
-        filename: isProd ? '[name].[hash].js' : '[name].bundle.js',
-        chunkFilename: isProd ? '[name].[hash].js' : '[name].bundle.js'
+    config.output = {
+        path: __dirname + '/../../../target/classes/static',
+        publicPath: '/',
+        filename: '[name].[hash].js',
+        chunkFilename: '[name].[hash].js'
     };
 
-    config.devtool = 'source-map';
+    config.devtool = 'cheap-source-map';
 
     config.module = {
         rules: [
@@ -76,12 +75,7 @@ module.exports = function makeWebpackConfig() {
     );
 
     config.plugins.push(
-        new webpack.NoErrorsPlugin(),
-        new webpack.optimize.DedupePlugin(),
-        new webpack.optimize.UglifyJsPlugin(),
-        new CopyWebpackPlugin([{
-            from: __dirname + '/src/public'
-        }])
+        new webpack.optimize.UglifyJsPlugin()
     );
 
     return config;
