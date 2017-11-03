@@ -1,10 +1,13 @@
+import angular from 'angular';
+
 angular
     .module("auth")
-    .controller("LoginController", function ($http, $location, $scope) {
+    .controller("LoginController", ["$http", "$location", "$scope",
+        function ($http, $location, $scope) {
 
     $scope.credentials = {};
 
-    var self = this;
+    const self = this;
 
     $http.get("/user").success(function (data) {
         if (data.name) {
@@ -24,9 +27,9 @@ angular
             self.authenticated = false;
             $location.path("/");
         }).error(function (data) {
-            console.log("Logout failed")
+            console.log("Logout failed");
             self.authenticated = false;
         });
     };
 
-});
+}]);

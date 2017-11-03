@@ -1,5 +1,7 @@
+import angular from 'angular';
+
 angular.module('auth').service('authInterceptor',
-    function ($q, $location) {
+    ['$q', '$location', function ($q, $location) {
 
         return {
 
@@ -19,4 +21,4 @@ angular.module('auth').service('authInterceptor',
 
         };
 
-    });
+    }]);
