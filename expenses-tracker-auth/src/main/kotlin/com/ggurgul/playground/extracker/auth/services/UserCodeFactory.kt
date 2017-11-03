@@ -16,7 +16,7 @@ class UserCodeFactory
         userCode.user = user
         userCode.type = codeType
         userCode.sentToEmail = user.email
-        userCode.code = codeTranslator.generateFor(user.username!!)
+        userCode.code = codeTranslator.generateFor(user.email!!)
         return userCode
     }
 

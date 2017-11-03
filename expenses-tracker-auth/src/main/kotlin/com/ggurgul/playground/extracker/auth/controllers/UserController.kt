@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.security.Principal
+import java.util.*
 import javax.websocket.server.PathParam
 
 
@@ -45,9 +46,9 @@ class UserController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @RequestMapping("/:username")
-    fun getUserByUsername(@PathParam("username") username: String): User {
-        return userRepository.findByUsername(username).orElseThrow { UserNotFoundException() }
+    @RequestMapping("/:email")
+    fun getById(@PathParam("id") id: Long): User {
+        return Optional.ofNullable(userRepository.findOne(id)).orElseThrow { UserNotFoundException() }
     }
 
 }

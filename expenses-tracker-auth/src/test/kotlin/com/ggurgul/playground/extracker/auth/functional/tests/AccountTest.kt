@@ -22,11 +22,11 @@ class AccountTest : AbstractFunctionalTest() {
         val dummyUser = userManager.createDummyUser()
 
         RestAssured.given()
-                .header("Authorization", "Bearer ${loginManager.getTokenFor(dummyUser.username!!, "secret")}")
+                .header("Authorization", "Bearer ${loginManager.getTokenFor(dummyUser.email!!, "secret")}")
                 .get("/auth/account")
                 .then()
                 .statusCode(200)
-                .body("username", Matchers.equalTo("alice"))
+                .body("email", Matchers.equalTo("alice"))
                 .body("email", Matchers.equalTo("alice@test.com"))
                 .body("firstName", Matchers.equalTo("Alice"))
                 .body("lastName", Matchers.equalTo("Smith"))

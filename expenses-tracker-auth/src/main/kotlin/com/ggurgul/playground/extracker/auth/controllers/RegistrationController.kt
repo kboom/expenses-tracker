@@ -40,9 +40,8 @@ constructor(
     ): ResponseEntity<*> {
         systemRunner.runInSystemContext {
             userService.registerUser(User(
-                    username = registrationRequest.username!!,
-                    password = passwordEncoder.encode(registrationRequest.password),
                     email = registrationRequest.email!!,
+                    password = passwordEncoder.encode(registrationRequest.password),
                     authorities = mutableListOf(authorityRepository.findOne(AuthorityName.ROLE_USER))
             ))
         }

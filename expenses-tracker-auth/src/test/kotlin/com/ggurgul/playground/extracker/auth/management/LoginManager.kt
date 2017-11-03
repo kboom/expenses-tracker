@@ -29,7 +29,7 @@ class LoginManager : ApplicationListener<EmbeddedServletContainerInitializedEven
             entity = UrlEncodedFormEntity(mutableListOf(
                     BasicNameValuePair("grant_type", "password"),
                     BasicNameValuePair("client_id", CLIENT_ID),
-                    BasicNameValuePair("username", username),
+                    BasicNameValuePair("email", username),
                     BasicNameValuePair("password", password)
             ))
         })

@@ -71,7 +71,7 @@ class LoginTest : AbstractFunctionalTest() {
         val params = HashMap<String, String>()
         params.put("grant_type", "password")
         params.put("client_id", VALID_CLIENT_ID)
-        params.put("username", username)
+        params.put("email", username)
         params.put("password", password)
 
         return given()

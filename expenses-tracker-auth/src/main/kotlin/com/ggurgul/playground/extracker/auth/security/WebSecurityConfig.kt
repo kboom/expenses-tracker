@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoT
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.NestedConfigurationProperty
 import org.springframework.boot.web.servlet.FilterRegistrationBean
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
@@ -20,6 +21,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -31,11 +33,14 @@ import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilt
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.filter.CompositeFilter
 import java.util.*
 import javax.servlet.Filter
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 @Configuration
 @EnableOAuth2Client
@@ -48,6 +53,9 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     @Autowired
     private lateinit var userDetailsService: LocalUserDetailsService
 
+    @Autowired
+    private lateinit var eventPublisher: ApplicationEventPublisher
+
     @Throws(Exception::class)
     override fun configure(auth: AuthenticationManagerBuilder) {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder())
@@ -56,10 +64,8 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     // new SavedRequestAwareAuthenticationSuccessHandler()
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
-        // .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         http.antMatcher("/**")
                 .formLogin()
-//                .httpBasic()
                 .and()
                 .authorizeRequests()
                 .antMatchers("/", "/login**", "/webjars/**").permitAll()
@@ -100,8 +106,8 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             idKey = "sub",
             identityType = IdentityType.GITHUB,
             mailKey = "email",
-            usernameKey = "username",
-            userDetailsService = userDetailsService
+            firstNameKey = "name",
+            lastNameKey = "surname"
     ))
 
     @Bean
@@ -110,8 +116,8 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             idKey = "sub",
             identityType = IdentityType.FACEBOOK,
             mailKey = "email",
-            usernameKey = "username",
-            userDetailsService = userDetailsService
+            firstNameKey = "name",
+            lastNameKey = "surname"
     ))
 
     @Bean
@@ -120,8 +126,8 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             idKey = "sub",
             identityType = IdentityType.GOOGLE,
             mailKey = "email",
-            usernameKey = "username",
-            userDetailsService = userDetailsService
+            firstNameKey = "name",
+            lastNameKey = "surname"
     ))
 
     private fun createClientFilter(): Filter {
@@ -137,6 +143,14 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     private fun createClientFilter(client: ClientResource, path: String): Filter {
         val filter = OAuth2ClientAuthenticationProcessingFilter(
                 path)
+        filter.setAuthenticationSuccessHandler(object: SavedRequestAwareAuthenticationSuccessHandler() {
+
+            override fun onAuthenticationSuccess(request: HttpServletRequest?, response: HttpServletResponse?, authentication: Authentication?) {
+                super.onAuthenticationSuccess(request, response, authentication)
+            }
+
+        })
+        filter.setApplicationEventPublisher(eventPublisher);
         val template = OAuth2RestTemplate(client.client, oauth2ClientContext)
         filter.setRestTemplate(template)
         val tokenServices = UserInfoTokenServices(

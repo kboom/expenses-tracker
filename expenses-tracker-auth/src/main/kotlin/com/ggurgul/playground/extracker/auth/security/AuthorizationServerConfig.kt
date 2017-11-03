@@ -121,10 +121,11 @@ class AuthorizationServerConfig : AuthorizationServerConfigurerAdapter() {
 
     class CustomTokenEnhancer : TokenEnhancer {
 
+        // todo if anything more is needed in the clients
         override fun enhance(accessToken: OAuth2AccessToken, authentication: OAuth2Authentication): OAuth2AccessToken {
             val additionalInfo = HashMap<String, Any?>()
-            val authenticatedUser = (authentication.principal as UserPrincipal)
-            additionalInfo.put("email", authenticatedUser.getEmail())
+//            val authenticatedUser = (authentication.principal as UserPrincipal)
+//            additionalInfo.put("email", authenticatedUser.getEmail())
             (accessToken as DefaultOAuth2AccessToken).additionalInformation = additionalInfo
             return accessToken
         }

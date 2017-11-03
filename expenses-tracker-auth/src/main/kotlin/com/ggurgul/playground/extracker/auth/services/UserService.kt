@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationEventPublisher
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import java.util.*
 import javax.transaction.Transactional
 
 @Service
@@ -30,7 +31,7 @@ class UserService(
 
     fun getActingUser(): User {
         val auth = SecurityContextHolder.getContext().authentication
-        return userRepository.findByUsername((auth.principal as UserPrincipal).username).orElseThrow {
+        return Optional.ofNullable(userRepository.findOne((auth.principal as UserPrincipal).id())).orElseThrow {
             IllegalStateException("No user found")
         }
     }
@@ -40,7 +41,7 @@ class UserService(
         val decodedCode = userCodeTranslator.readFrom(code)
         val username: String = decodedCode.substringBefore(":")
 
-        val user = userRepository.findByUsername(username).orElseThrow { IllegalStateException() }
+        val user = Optional.of(userRepository.findOne(username as Long)).orElseThrow { IllegalStateException() }
 
         val userCode = userCodesRepository.findByUserAndType(user, UserCodeType.REGISTRATION_CONFIRMATION)
                 .orElseThrow { IllegalStateException() }
@@ -95,7 +96,7 @@ class UserService(
         val decodedCode = userCodeTranslator.readFrom(code)
         val username: String = decodedCode.substringBefore(":")
 
-        val user = userRepository.findByUsername(username).orElseThrow { WrongConfirmationCodeException() }
+        val user = Optional.of(userRepository.findOne(username as Long)).orElseThrow { WrongConfirmationCodeException() }
 
         val userCode = userCodesRepository.findByUserAndType(user, UserCodeType.PASSWORD_RESET)
                 .orElseThrow { WrongConfirmationCodeException() }

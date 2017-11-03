@@ -38,7 +38,7 @@ class RegistrationTest : AbstractFunctionalTest() {
         RestAssured.given()
                 .body("""
                     {
-                        "username": "peter",
+                        "email": "peter",
                         "password": "peterPan123",
                         "email": "gurgul.grzegorz@gmail.com"
                     }
@@ -99,9 +99,8 @@ class RegistrationTest : AbstractFunctionalTest() {
 
     private fun createUserAndGetConfirmationCode(): String {
         val user = userService.registerUser(User(
-                username = "someone",
-                password = passwordEncoder.encode("qwerty"),
-                email = "someone@anything.com"
+                email = "someone@anyone.com",
+                password = passwordEncoder.encode("qwerty")
         ))
 
         return codesRepository.findByUserAndType(user, UserCodeType.REGISTRATION_CONFIRMATION).map { it.code }.get()

@@ -19,7 +19,7 @@ data class UserAccount(
 
         fun fromUser(user: User): UserAccount {
             return UserAccount(
-                    username = user.username,
+                    username = user.email,
                     email = user.email,
                     firstName = user.firstName,
                     lastName = user.lastName

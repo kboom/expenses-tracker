@@ -22,9 +22,8 @@ class UsersManager {
     private lateinit var passwordEncoder: PasswordEncoder
 
     fun createDummyUser() = userRepository.save(User(
-            username = "dummy",
+            email = "someone@anyone.com",
             password = passwordEncoder.encode("secret"),
-            email = "someone@anything.com",
             enabled = true,
             authorities = mutableListOf(Authority(AuthorityName.ROLE_USER))
     ))!!
