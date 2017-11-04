@@ -3,7 +3,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {AppComponent} from './app.component';
 import {LoginPage} from './pages/login'
 import {RegisterPage} from "./pages/register/register.page";
-import {WelcomePage} from "./pages/welcome/welcome.page";
+import {WelcomePage, CanActivateWelcomePage} from "./pages/welcome/welcome.page";
 import {PreloadAllModules, RouterModule} from "@angular/router";
 import {ReactiveFormsModule, FormsModule} from "@angular/forms";
 import {FlexLayoutModule} from "@angular/flex-layout";
@@ -20,9 +20,18 @@ import {ValidationMessageProvider} from "./services/validation/validation.messag
 import {LocalLoginFormComponent} from "./components/LocalLoginForm/LocalLoginForm.component";
 import {SocialLoginPanelComponent} from "./components/SocialLoginPanel/SocialLoginPanel.component";
 import {LoginService} from "./services/login.service";
+import {UserRepository} from "./modules/+user/user.repository";
+import {UserFactory} from "./models/index";
+import {UserHolder} from "./modules/+user/user.holder";
+import {ServerModule} from "./modules/+server/server.module";
 
 const APP_PROVIDERS = [
-    ValidationMessageProvider, LoginService
+    ValidationMessageProvider,
+    LoginService,
+    UserRepository,
+    UserFactory,
+    UserHolder,
+    CanActivateWelcomePage
 ];
 
 import "../styles/styles.scss";
@@ -39,6 +48,7 @@ import "../styles/styles.scss";
         RouterModule.forRoot(ROUTES, {useHash: true, preloadingStrategy: PreloadAllModules}),
         MatInputModule,
         MatButtonModule,
+        ServerModule
     ],
     declarations: [
         AppComponent,
@@ -50,7 +60,7 @@ import "../styles/styles.scss";
         SocialLoginPanelComponent
     ],
     providers: [
-        APP_PROVIDERS
+        ...APP_PROVIDERS
     ],
     bootstrap: [AppComponent]
 })

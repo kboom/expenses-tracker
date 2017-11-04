@@ -1,13 +1,27 @@
-class UserModel {
+import {RoleModel} from "./Role.model";
+
+export default class UserModel implements ModelEntity {
 
     constructor(
-        readonly username: string,
-        readonly authenticated: boolean
+        public username: string,
+        public email: string,
+        public authorities: RoleModel[] = [],
+        public firstName: string = null,
+        public lastName: string = null,
     ) {}
+
+    isKnown(): boolean {
+        return !!this.username
+    }
+
+    hasAnyRole(...role: RoleModel[]) {
+        if (this.authorities) {
+            return role.some(v => this.authorities.lastIndexOf(v) >= 0)
+        } else {
+            return false;
+        }
+    }
 
 }
 
-const unknownUser = () => new UserModel(null, false);
-
-export { unknownUser }
-export default UserModel
+export const unknownUser = () => new UserModel(null, null);
