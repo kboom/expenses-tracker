@@ -5,9 +5,12 @@ import {Component} from '@angular/core';
     template: `
 
         <main>
-            <router-outlet></router-outlet>
+            <div class="center-in-frame">
+                <router-outlet></router-outlet>
+            </div>
         </main>
 
     `
 })
-export class AppComponent {}
+export class AppComponent {
+}
