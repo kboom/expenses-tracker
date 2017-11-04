@@ -95,7 +95,7 @@ registration:
 
 admin:
   username: admin
-  password: secret
+  password: Secret123!
 
 user:
   password:

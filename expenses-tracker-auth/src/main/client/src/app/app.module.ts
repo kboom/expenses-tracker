@@ -15,6 +15,7 @@ import {
 import {ControlMessagesComponent} from "./components/ControlMessages/ControlMessages.component";
 import {ValidationMessageProvider} from "./services/validation/validation.messages";
 import {LocalLoginFormComponent} from "./components/LocalLoginForm/LocalLoginForm.component";
+import {SocialLoginPanelComponent} from "./components/SocialLoginPanel/SocialLoginPanel.component";
 
 const APP_PROVIDERS = [
 ValidationMessageProvider,
@@ -38,7 +39,8 @@ import "../styles/styles.scss";
         LoginPage,
         RegisterPage,
         ControlMessagesComponent,
-        LocalLoginFormComponent
+        LocalLoginFormComponent,
+        SocialLoginPanelComponent
     ],
     providers: [
         APP_PROVIDERS

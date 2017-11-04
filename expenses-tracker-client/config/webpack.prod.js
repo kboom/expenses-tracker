@@ -152,7 +152,7 @@ module.exports = function (env) {
        *
        * See: https://github.com/webpack/extract-text-webpack-plugin
        */
-      new ExtractTextPlugin('static/[name].[contenthash].css'), // todo this setting causes sourcemap of css to be under static/static
+      new ExtractTextPlugin('static/[name].[contenthash].css'),
 
       /**
        * Plugin: DefinePlugin

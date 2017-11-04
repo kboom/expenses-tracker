@@ -17,7 +17,6 @@ class LocalUserDetailsService
         @Qualifier("predefinedUsers") private val predefinedUsers: Map<String, UserPrincipal>
 ) : UserDetailsService {
 
-    @Throws(UserNotFoundException::class)
     override fun loadUserByUsername(email: String) = predefinedUsers.getOrElse(email) {
         systemRunner.runInSystemContext {
             userRepository.findByEmail(email).map { user -> UserPrincipalEntity(user) }
