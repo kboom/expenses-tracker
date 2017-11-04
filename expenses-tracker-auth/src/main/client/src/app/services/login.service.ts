@@ -2,17 +2,29 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs/Observable";
 import UserModel from "../models/User.model";
-import {LOGIN_URL} from "../app.api";
+import {USER_URL} from "../app.api";
+import {UserHolder} from "../modules/+user/user.holder";
+import {UserFactory} from "../models/index";
 
 @Injectable()
 export class LoginService {
 
-    constructor(private http: HttpClient) {}
+    constructor(private readonly http: HttpClient,
+                private readonly userFactory: UserFactory,
+                private readonly userHolder: UserHolder) {
+    }
 
     public signIn(username: string, password: string): Observable<UserModel> {
-        return this.http.post(LOGIN_URL, `username=${username}&password=${password}`, {
-            headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
-        }).catch(() => Observable.throw("Could not sign in"));
+        const getUser$ = this.http.get(USER_URL, {
+            headers: new HttpHeaders().set('Authorization', `Basic ${btoa(`${username}:${password}`)}`)
+        }).map((body: any) => this.userFactory.constructEntity(body))
+            .catch(() => Observable.throw("Could not sign in"));
+
+        getUser$.subscribe((userEntity) => {
+            this.userHolder.setUser(userEntity);
+        });
+
+        return getUser$;
     }
 
 }

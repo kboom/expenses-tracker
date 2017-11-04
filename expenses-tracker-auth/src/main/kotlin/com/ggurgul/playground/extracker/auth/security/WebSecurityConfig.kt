@@ -20,7 +20,6 @@ import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
-import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User
@@ -35,7 +34,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
-import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.filter.CompositeFilter
 import java.util.*
 import javax.servlet.Filter
@@ -65,10 +63,11 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         http.antMatcher("/**")
-                .formLogin()
+//                .formLogin()
+                .httpBasic()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/", "/login**", "/webjars/**").permitAll()
+                .antMatchers("/", "/webjars/**").permitAll()
                 .antMatchers("/registration/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/account/password/reset*/**").permitAll()
                 .anyRequest()
