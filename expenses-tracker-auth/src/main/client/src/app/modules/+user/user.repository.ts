@@ -5,7 +5,6 @@ import UserModel, {unknownUser} from "../../models/User.model";
 import {USER_URL} from "../../app.api";
 import Entity from "../../models/hateoas/Entity.model";
 import {UserFactory} from "../../models/index";
-import {RequestOptions, Request, RequestMethod} from '@angular/http';
 
 
 @Injectable()
@@ -15,7 +14,7 @@ export class UserRepository {
                 private userFactory: UserFactory) {}
 
     public getMe(): Observable<Entity<UserModel>> {
-        return this.http.get(USER_URL, )
+        return this.http.get(USER_URL)
             .map((body: any) => this.userFactory.constructEntity(body))
             .catch(() => Observable.of(Entity.empty(unknownUser())));
     }
