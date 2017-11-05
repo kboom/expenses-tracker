@@ -22,6 +22,7 @@ export const USER_REMOVED_EVENT = "USER_REMOVED_EVENT";
 export const USER_CHANGED_EVENT = "USER_CHANGED_EVENT";
 
 export const SIGNED_IN_FROM_SESSION_EVENT = "SIGNED_IN_FROM_SESSION_EVENT";
+export const SIGNED_IN = "SIGNED_IN";
 
 @Injectable()
 export default class EventBusService {

@@ -5,13 +5,15 @@ import UserModel from "../models/User.model";
 import {USER_URL} from "../app.api";
 import {UserHolder} from "../modules/+user/user.holder";
 import {UserFactory} from "../models/index";
+import EventBusService, {SIGNED_IN} from "../app.events";
 
 @Injectable()
 export class LoginService {
 
     constructor(private readonly http: HttpClient,
                 private readonly userFactory: UserFactory,
-                private readonly userHolder: UserHolder) {
+                private readonly userHolder: UserHolder,
+                private readonly eventBus: EventBusService) {
     }
 
     public signIn(username: string, password: string): Observable<UserModel> {
@@ -22,6 +24,7 @@ export class LoginService {
 
         getUser$.subscribe((userEntity) => {
             this.userHolder.setUser(userEntity);
+            this.eventBus.publish(SIGNED_IN, userEntity);
         });
 
         return getUser$;
