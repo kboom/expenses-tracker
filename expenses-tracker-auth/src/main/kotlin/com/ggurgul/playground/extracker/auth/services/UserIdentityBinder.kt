@@ -2,63 +2,68 @@ package com.ggurgul.playground.extracker.auth.services
 
 import com.ggurgul.playground.extracker.auth.models.*
 import com.ggurgul.playground.extracker.auth.repositories.UserRepository
-import org.springframework.context.ApplicationListener
-import org.springframework.security.authentication.event.AuthenticationSuccessEvent
-import org.springframework.security.oauth2.provider.OAuth2Authentication
+import org.springframework.security.core.GrantedAuthority
 import org.springframework.stereotype.Component
+import java.security.Principal
 import java.util.*
+
+interface IdentityBinder {
+
+    fun convertPrincipal(principal: ExternalPrincipal): Principal
+    fun getAuthoritiesFrom(principal: ExternalPrincipal): List<GrantedAuthority>
+
+}
 
 @Component
 class UserIdentityBinder(
         val userDetailsService: LocalUserDetailsService,
         val userRepository: UserRepository
-) : ApplicationListener<AuthenticationSuccessEvent> {
+) : IdentityBinder {
 
-    override fun onApplicationEvent(evt: AuthenticationSuccessEvent) {
-        when (evt.authentication.principal) {
-            is ExternalPrincipal -> createOrBindUser(evt.authentication as OAuth2Authentication)
-        }
-    }
-
-    private fun createOrBindUser(auth: OAuth2Authentication) {
-        val principal = auth.principal as ExternalPrincipal
+    override fun convertPrincipal(principal: ExternalPrincipal): UserPrincipal {
         val boundUser = userDetailsService.findByIdentity(principal.identity, principal.identityType)
+                .orElseGet { bindOrCreateUsingEmail(principal) }
 
-        if (!boundUser.isPresent) {
-            val unboundUser = userDetailsService.findByEmail(principal.email)
-            if (unboundUser.isPresent) {
-                bindNewIdentity(unboundUser, principal)
-            } else {
-                createNewUser(auth)
-            }
-        }
-
-        // todo probably authentication should be swapper to a normal one at this point (the local one as we have the user now)
+        return UserPrincipalEntity(boundUser)
     }
 
-    private fun createNewUser(auth: OAuth2Authentication) {
-        val principal = auth.principal as ExternalPrincipal
-        userRepository.save(
+    /**
+     * Although this might look like doing the same thing the second time, it is going to be super fast.
+     * The user is already there - cached - so it is just a matter of retrieving him.
+     */
+    override fun getAuthoritiesFrom(principal: ExternalPrincipal): List<GrantedAuthority> {
+        return convertPrincipal(principal).authorities.toList()
+    }
+
+    private fun bindOrCreateUsingEmail(principal: ExternalPrincipal): User {
+        val unboundUser = userDetailsService.findByEmail(principal.email)
+        if (unboundUser.isPresent) {
+            return bindNewIdentity(unboundUser, principal)
+        } else {
+            return createNewUserFrom(principal)
+        }
+    }
+
+    private fun createNewUserFrom(principal: ExternalPrincipal): User {
+        return userRepository.save(
                 User(
                         email = principal.email,
                         firstName = principal.firstName,
                         lastName = principal.lastName,
                         enabled = true,
-                        authorities = auth.authorities.map { Authority(AuthorityName.valueOf(it.authority!!)) }
-                                .toMutableList()
+                        authorities = listOf(AuthorityName.ROLE_USER).map { Authority(it) }.toMutableList()
                 ).apply {
                     boundIdentities = mutableListOf(createIdentity(principal.identity, principal.identityType))
                 }
         )
     }
 
-    private fun bindNewIdentity(unboundUser: Optional<User>, principal: ExternalPrincipal) {
-        userRepository.save(
-                unboundUser.get().apply {
-                    boundIdentities.add(createIdentity(principal.identity, principal.identityType))
-                }
-        )
-    }
+    private fun bindNewIdentity(unboundUser: Optional<User>, principal: ExternalPrincipal) = userRepository.save(
+            unboundUser.get().apply {
+                boundIdentities.add(createIdentity(principal.identity, principal.identityType))
+            }
+    )
+
 
     private fun User.createIdentity(identity: String, identityType: IdentityType): BoundIdentity {
         return BoundIdentity(

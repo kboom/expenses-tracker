@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {UserRepository} from "./modules/+user/user.repository";
 import {UserHolder} from "./modules/+user/user.holder";
+import EventBusService, {SIGNED_IN_FROM_SESSION_EVENT} from "./app.events";
 
 @Component({
     selector: 'my-app',
@@ -17,6 +18,7 @@ import {UserHolder} from "./modules/+user/user.holder";
 export class AppComponent implements OnInit {
 
     constructor(
+        private readonly eventBusService: EventBusService,
         private readonly userRepository: UserRepository,
         private readonly userHolder: UserHolder
     ) {
@@ -25,7 +27,10 @@ export class AppComponent implements OnInit {
 
     ngOnInit(): void {
         this.userRepository.getMe().subscribe((user) => {
-            this.userHolder.setUser(user)
+            this.userHolder.setUser(user);
+            if(user.entity.isKnown()) {
+                this.eventBusService.publish(SIGNED_IN_FROM_SESSION_EVENT, user)
+            }
         });
     }
 

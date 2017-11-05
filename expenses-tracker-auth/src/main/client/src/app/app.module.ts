@@ -24,8 +24,10 @@ import {UserRepository} from "./modules/+user/user.repository";
 import {UserFactory} from "./models/index";
 import {UserHolder} from "./modules/+user/user.holder";
 import {ServerModule} from "./modules/+server/server.module";
+import EventBusService from "./app.events";
 
 const APP_PROVIDERS = [
+    EventBusService,
     ValidationMessageProvider,
     LoginService,
     UserRepository,
