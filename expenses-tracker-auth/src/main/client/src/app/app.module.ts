@@ -10,7 +10,7 @@ import {FlexLayoutModule} from "@angular/flex-layout";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {HttpModule} from "@angular/http";
 import {HttpClientModule} from "@angular/common/http";
-import {ROUTES} from "./app.routes";
+import {ROUTES, PageChangeEventsRouter} from "./app.routes";
 import {
     MatButtonModule,
     MatInputModule,
@@ -33,7 +33,8 @@ const APP_PROVIDERS = [
     UserRepository,
     UserFactory,
     UserHolder,
-    CanActivateWelcomePage
+    CanActivateWelcomePage,
+    PageChangeEventsRouter
 ];
 
 import "../styles/styles.scss";

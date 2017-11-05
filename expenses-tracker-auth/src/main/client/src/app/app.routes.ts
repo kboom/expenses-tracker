@@ -18,7 +18,9 @@ export class PageChangeEventsRouter {
     constructor(
         private readonly router: Router,
         private readonly eventBusService: EventBusService
-    ) {
+    ) {}
+
+    bind() {
         this.eventBusService.observeEvents(SIGNED_IN_FROM_SESSION_EVENT).subscribe(
             () => this.router.navigate([WELCOME_PAGE_ROUTE.path])
         )
