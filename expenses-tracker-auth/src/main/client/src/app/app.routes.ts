@@ -9,7 +9,7 @@ export const ROUTES: Routes = [
     {path: 'login', component: LoginPage},
     {path: 'register', component: RegisterPage},
     WELCOME_PAGE_ROUTE,
-    {path: '', redirectTo: 'login', pathMatch: 'full'}
+    // {path: '', redirectTo: 'login', pathMatch: 'full'}
 ];
 
 @Injectable()

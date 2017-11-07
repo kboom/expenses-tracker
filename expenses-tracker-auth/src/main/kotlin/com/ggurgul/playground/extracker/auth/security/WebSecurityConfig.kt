@@ -1,5 +1,6 @@
 package com.ggurgul.playground.extracker.auth.security
 
+import com.ggurgul.playground.extracker.auth.handlers.LocalAuthenticationFailureHandler
 import com.ggurgul.playground.extracker.auth.models.IdentityType
 import com.ggurgul.playground.extracker.auth.services.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -65,23 +66,28 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         http.antMatcher("/**")
-//                .formLogin()
-                .httpBasic()
+                .formLogin()
+                .loginProcessingUrl("/api/login") // not necessarily needed
+                .failureHandler(localAuthenticationFailureHandler())
+//                .httpBasic()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/", "/webjars/**").permitAll()
+                .antMatchers("/", "/login", "/api/login**", "/webjars/**").permitAll()
                 .antMatchers("/registration/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/account/password/reset*/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
                 .exceptionHandling()
-                .authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/"))
+                .authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/login"))
                 .and().logout().logoutSuccessUrl("/").permitAll().and()
                 // .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .csrf().disable() // todo consider how to enable this only for parts of the service which is exposed to the web browser
                 .addFilterBefore(createClientFilter(), BasicAuthenticationFilter::class.java)
     }
+
+    @Bean
+    fun localAuthenticationFailureHandler() = LocalAuthenticationFailureHandler()
 
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()

@@ -19,7 +19,6 @@ import {ControlMessagesComponent} from "./components/ControlMessages/ControlMess
 import {ValidationMessageProvider} from "./services/validation/validation.messages";
 import {LocalLoginFormComponent} from "./components/LocalLoginForm/LocalLoginForm.component";
 import {SocialLoginPanelComponent} from "./components/SocialLoginPanel/SocialLoginPanel.component";
-import {LoginService} from "./services/login.service";
 import {UserRepository} from "./modules/+user/user.repository";
 import {UserFactory} from "./models/index";
 import {UserHolder} from "./modules/+user/user.holder";
@@ -29,7 +28,6 @@ import EventBusService from "./app.events";
 const APP_PROVIDERS = [
     EventBusService,
     ValidationMessageProvider,
-    LoginService,
     UserRepository,
     UserFactory,
     UserHolder,
@@ -38,6 +36,7 @@ const APP_PROVIDERS = [
 ];
 
 import "../styles/styles.scss";
+import {LocationStrategy, PathLocationStrategy} from "@angular/common";
 
 @NgModule({
     imports: [
@@ -63,6 +62,7 @@ import "../styles/styles.scss";
         SocialLoginPanelComponent
     ],
     providers: [
+        {provide: LocationStrategy, useClass: PathLocationStrategy},
         ...APP_PROVIDERS
     ],
     bootstrap: [AppComponent]

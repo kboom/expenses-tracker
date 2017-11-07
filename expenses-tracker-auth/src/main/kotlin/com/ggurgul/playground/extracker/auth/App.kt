@@ -11,6 +11,7 @@ import org.springframework.core.Ordered
 import org.springframework.data.repository.query.spi.EvaluationContextExtension
 import org.springframework.data.repository.query.spi.EvaluationContextExtensionSupport
 import org.springframework.hateoas.config.EnableEntityLinks
+import org.springframework.http.HttpRequest
 import org.springframework.http.MediaType
 import org.springframework.mail.MailSender
 import org.springframework.mail.SimpleMailMessage
@@ -18,13 +19,18 @@ import org.springframework.mail.javamail.JavaMailSenderImpl
 import org.springframework.security.access.expression.SecurityExpressionRoot
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
-import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
+import org.springframework.web.servlet.NoHandlerFoundException
+import org.springframework.web.servlet.ViewResolver
+import org.springframework.web.servlet.config.annotation.*
+import org.springframework.web.servlet.view.InternalResourceView
+import org.springframework.web.servlet.view.InternalResourceViewResolver
+import org.springframework.web.servlet.view.UrlBasedViewResolver
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 /**
  * Implement internal user mechanisms https://gigsterous.github.io/engineering/2017/03/01/spring-boot-4.html
@@ -34,7 +40,42 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @SpringBootApplication
 @EnableEurekaClient
 @EnableEntityLinks
-class App {
+@RestController
+//@ControllerAdvice
+class App : WebMvcConfigurerAdapter() {
+
+
+//    @ExceptionHandler(NoHandlerFoundException::class)
+//    fun handleError404(): String {
+//        return "redirect:/index.html";
+//    }
+//
+//    @Override
+//    override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+//        registry.addResourceHandler("/index.html").addResourceLocations("classpath:/static/index.html");
+//        super.addResourceHandlers(registry);
+//    }
+//
+//    @Bean
+//    fun viewResolver(): ViewResolver {
+//        val viewResolver = UrlBasedViewResolver();
+//        viewResolver.setViewClass(InternalResourceView::class.java)
+//        return viewResolver
+//    }
+
+    @RequestMapping(value = "/{[path:[^\\.]*}")
+    fun redirect(request: HttpServletRequest, response: HttpServletResponse) {
+        request.getRequestDispatcher("/index.html").forward(request, response)
+    }
+
+//    override fun addViewControllers(registry: ViewControllerRegistry?) {
+//        registry!!.addViewController("/\\w+/")
+//                .setViewName("forward:/")
+////        registry.addViewController("/**/\\w+")
+////                .setViewName("forward:/")
+////        registry.addViewController("/{spring:\\w+}/**{spring:?!(\\.js|\\.css)$}")
+////                .setViewName("forward:/")
+//    }
 
     @Bean
     fun bCryptPasswordEncoder(): BCryptPasswordEncoder {
