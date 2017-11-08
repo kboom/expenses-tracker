@@ -52,11 +52,6 @@ class App : WebMvcConfigurerAdapter() {
     }
 
     @Bean
-    fun bCryptPasswordEncoder(): BCryptPasswordEncoder {
-        return BCryptPasswordEncoder()
-    }
-
-    @Bean
     fun securityExtension(): EvaluationContextExtension {
         return SecurityEvaluationContextExtension()
     }

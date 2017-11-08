@@ -1,15 +1,15 @@
 package com.ggurgul.playground.extracker.auth.security
 
 import com.ggurgul.playground.extracker.auth.services.LocalUserDetailsService
-import com.ggurgul.playground.extracker.auth.services.UserPrincipal
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 import org.springframework.core.io.ClassPathResource
-import org.springframework.http.MediaType
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken
 import org.springframework.security.oauth2.common.OAuth2AccessToken
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer
@@ -22,9 +22,6 @@ import org.springframework.security.oauth2.provider.token.*
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
-import java.security.Principal
 import java.util.*
 
 
@@ -38,6 +35,9 @@ class AuthorizationServerConfig : AuthorizationServerConfigurerAdapter() {
     @Autowired
     private lateinit var userDetailsService: LocalUserDetailsService
 
+    @Autowired
+    private lateinit var passwordEncoder: PasswordEncoder
+
     @Value("\${keystore.password}")
     private val pwd: String? = null
 
@@ -45,14 +45,16 @@ class AuthorizationServerConfig : AuthorizationServerConfigurerAdapter() {
 
     @Throws(Exception::class)
     override fun configure(oauthServer: AuthorizationServerSecurityConfigurer?) {
-        oauthServer!!.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()")
+        oauthServer!!.tokenKeyAccess("permitAll()")
+                .checkTokenAccess("isAuthenticated()")
+                .passwordEncoder(passwordEncoder)
     }
 
     @Throws(Exception::class)
     override fun configure(clients: ClientDetailsServiceConfigurer?) {
         clients!!.inMemory()
                 .withClient("expenses-tracker-service")
-                .secret("expenses-tracker-service-secret")
+                .secret(passwordEncoder.encode("expenses-tracker-service-secret"))
                 .authorizedGrantTypes("client_credentials", "password", "authorization_code", "refresh_token")
                 .accessTokenValiditySeconds(3600)
                 .refreshTokenValiditySeconds(2592000)
@@ -63,7 +65,7 @@ class AuthorizationServerConfig : AuthorizationServerConfigurerAdapter() {
                 .and()
 
                 .withClient("expenses-tracker-api")
-                .secret("expenses-tracker-api-secret")
+                .secret(passwordEncoder.encode("expenses-tracker-api-secret"))
                 .authorizedGrantTypes("client_credentials", "password", "authorization_code", "refresh_token")
                 .accessTokenValiditySeconds(3600)
                 .refreshTokenValiditySeconds(2592000)

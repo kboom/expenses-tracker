@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 
 
 @RestController
-@RequestMapping(value = "/registration")
+@RequestMapping(value = "/api/registration")
 class RegistrationController
 @Autowired
 constructor(
