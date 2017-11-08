@@ -21,6 +21,7 @@ import {ControlMessagesComponent} from "./components/ControlMessages/ControlMess
 import {ValidationMessageProvider} from "./services/validation/validation.messages";
 import {LocalLoginFormComponent} from "./components/LocalLoginForm/LocalLoginForm.component";
 import {SocialLoginPanelComponent} from "./components/SocialLoginPanel/SocialLoginPanel.component";
+import {LocalRegistrationFormComponent} from "./components/LocalRegistrationForm/LocalRegistrationForm.component";
 import {UserRepository} from "./modules/+user/user.repository";
 import {UserFactory} from "./models/index";
 import {UserHolder} from "./modules/+user/user.holder";
@@ -74,6 +75,7 @@ import "../styles/styles.scss";
         ControlMessagesComponent,
         LocalLoginFormComponent,
         SocialLoginPanelComponent,
+        LocalRegistrationFormComponent,
         MessagePanelComponent
     ],
     providers: [
