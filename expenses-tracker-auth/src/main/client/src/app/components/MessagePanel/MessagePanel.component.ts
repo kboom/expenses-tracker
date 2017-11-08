@@ -1,19 +1,20 @@
 import {Component, Input, OnInit} from "@angular/core";
 import {Observable} from "rxjs/Observable";
-import {ServerMessage} from "../../modules/+server/server.messages";
+import {ServerMessage, ServerMessageAware} from "../../modules/+server/server.messages";
 
 @Component({
     selector: 'message-panel',
     styleUrls: ['MessagePanel.scss'],
     template: `
 
-        <div class="control-messages">
+        <div class="message-panel">
             <div *ngFor="let message of message$ | async" 
-                 class="control-messages__message">{{ message.text | translate }}</div>
+                 class="message-panel__message message-panel__message--{{ ServerMessageType[message.type].toLowerCase() }}">{{ message.text | translate }}</div>
         </div>
 
     `
 })
+@ServerMessageAware
 export class MessagePanelComponent {
 
     @Input()

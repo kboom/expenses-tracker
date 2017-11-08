@@ -14,6 +14,10 @@ export enum ServerMessageType {
     ERROR
 }
 
+export function ServerMessageAware(constructor: Function) {
+    constructor.prototype.ServerMessageType = ServerMessageType;
+}
+
 @Injectable()
 export default class ServerMessages {
 
