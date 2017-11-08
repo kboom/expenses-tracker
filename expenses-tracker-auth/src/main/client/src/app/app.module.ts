@@ -9,7 +9,9 @@ import {ReactiveFormsModule, FormsModule} from "@angular/forms";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {HttpModule} from "@angular/http";
-import {HttpClientModule} from "@angular/common/http";
+import {HttpClientModule, HttpClient} from "@angular/common/http";
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import {ROUTES, PageChangeEventsRouter} from "./app.routes";
 import {
     MatButtonModule,
@@ -47,6 +49,15 @@ import "../styles/styles.scss";
         BrowserAnimationsModule,
         HttpModule,
         HttpClientModule,
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: (http: HttpClient) => {
+                    return new TranslateHttpLoader(http);
+                },
+                deps: [HttpClient]
+            }
+        }),
         FlexLayoutModule,
         FormsModule,
         ReactiveFormsModule,

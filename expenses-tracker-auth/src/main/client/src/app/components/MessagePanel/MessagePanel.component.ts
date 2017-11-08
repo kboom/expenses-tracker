@@ -9,7 +9,7 @@ import {ServerMessage} from "../../modules/+server/server.messages";
 
         <div class="control-messages">
             <div *ngFor="let message of message$ | async" 
-                 class="control-messages__message">a {{message.text}}</div>
+                 class="control-messages__message">{{ message.text | translate }}</div>
         </div>
 
     `

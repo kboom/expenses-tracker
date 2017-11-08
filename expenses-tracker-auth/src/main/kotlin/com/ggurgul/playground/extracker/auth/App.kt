@@ -24,6 +24,7 @@ import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -38,6 +39,12 @@ import javax.servlet.http.HttpServletResponse
 @EnableEntityLinks
 @RestController
 class App : WebMvcConfigurerAdapter() {
+
+    override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+        registry
+          .addResourceHandler("/assets/**")
+          .addResourceLocations("classpath:/static/assets/");
+    }
 
     @RequestMapping(value = "/{[path:[^\\.]*}")
     fun redirect(request: HttpServletRequest, response: HttpServletResponse) {

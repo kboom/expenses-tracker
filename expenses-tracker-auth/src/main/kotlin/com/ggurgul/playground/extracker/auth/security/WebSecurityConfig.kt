@@ -72,7 +72,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 //                .httpBasic()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/", "/login", "/api/login**", "/webjars/**").permitAll()
+                .antMatchers("/", "/login", "/api/login**", "/assets/**", "/webjars/**").permitAll()
                 .antMatchers("/registration/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/account/password/reset*/**").permitAll()
                 .anyRequest()
