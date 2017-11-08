@@ -1,4 +1,5 @@
 import {Component} from "@angular/core";
+import ServerMessages from "../../modules/+server/server.messages";
 
 @Component({
     selector: 'loginPage',
@@ -7,6 +8,7 @@ import {Component} from "@angular/core";
     template: `
 
         <h1 class="login-page__header">Welcome to ExTrackerApp!</h1>
+        <message-panel [message$]="serverMessages.messages$"></message-panel>
         <div fxLayout="row" fxLayoutGap="30px" fxFlexAlign="space-around center" fxFill>
             <div class="login-page__local-login-box">
                 <localLoginForm></localLoginForm>
@@ -20,5 +22,9 @@ import {Component} from "@angular/core";
     `
 })
 export class LoginPage {
+
+    constructor(readonly serverMessages: ServerMessages) {
+
+    }
 
 }

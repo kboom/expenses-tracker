@@ -24,6 +24,9 @@ import {UserFactory} from "./models/index";
 import {UserHolder} from "./modules/+user/user.holder";
 import {ServerModule} from "./modules/+server/server.module";
 import EventBusService from "./app.events";
+import {LocationStrategy, PathLocationStrategy} from "@angular/common";
+import {MessagePanelComponent} from "./components/MessagePanel/MessagePanel.component";
+import ServerMessages from "./modules/+server/server.messages";
 
 const APP_PROVIDERS = [
     EventBusService,
@@ -31,12 +34,12 @@ const APP_PROVIDERS = [
     UserRepository,
     UserFactory,
     UserHolder,
+    ServerMessages,
     CanActivateWelcomePage,
     PageChangeEventsRouter
 ];
 
 import "../styles/styles.scss";
-import {LocationStrategy, PathLocationStrategy} from "@angular/common";
 
 @NgModule({
     imports: [
@@ -59,7 +62,8 @@ import {LocationStrategy, PathLocationStrategy} from "@angular/common";
         RegisterPage,
         ControlMessagesComponent,
         LocalLoginFormComponent,
-        SocialLoginPanelComponent
+        SocialLoginPanelComponent,
+        MessagePanelComponent
     ],
     providers: [
         {provide: LocationStrategy, useClass: PathLocationStrategy},
