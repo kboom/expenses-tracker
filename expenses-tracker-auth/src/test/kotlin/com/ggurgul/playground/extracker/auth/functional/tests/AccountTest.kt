@@ -4,6 +4,8 @@ import com.ggurgul.playground.extracker.auth.functional.AbstractFunctionalTest
 import com.ggurgul.playground.extracker.auth.management.LoginManager
 import com.ggurgul.playground.extracker.auth.management.UsersManager
 import io.restassured.RestAssured
+import io.restassured.authentication.FormAuthConfig
+import io.restassured.config.LogConfig
 import org.hamcrest.Matchers
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,13 +22,22 @@ class AccountTest : AbstractFunctionalTest() {
     @Test
     fun userCanGetProfile() {
         val dummyUser = userManager.createDummyUser()
-
         RestAssured.given()
-                .header("Authorization", "Bearer ${loginManager.getTokenFor(dummyUser.email!!, "secret")}")
-                .get("/auth/account")
+                .header("Authorization", "Bearer ${loginManager.getTokenFor(dummyUser.email, "secret")}")
+                .get("/api/users/me")
                 .then()
                 .statusCode(200)
-                .body("email", Matchers.equalTo("alice"))
+                .body("username", Matchers.equalTo("someone@anyone.com"))
+    }
+
+    @Test
+    fun userCanGetProfileLocalLogin() {
+        RestAssured.given()
+                .auth().form("admin", "Secret123!", FormAuthConfig("api/login", "username", "password").withLoggingEnabled())
+                .get("/api/users/me")
+                .then()
+                .statusCode(200)
+                .body("username", Matchers.equalTo("alice"))
                 .body("email", Matchers.equalTo("alice@test.com"))
                 .body("firstName", Matchers.equalTo("Alice"))
                 .body("lastName", Matchers.equalTo("Smith"))

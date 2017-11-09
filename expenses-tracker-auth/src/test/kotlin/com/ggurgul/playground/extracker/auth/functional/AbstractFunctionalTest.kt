@@ -23,7 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner
 @Category(FunctionalTest::class)
 @RunWith(SpringRunner::class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-@ActiveProfiles("dev")
+@ActiveProfiles("dev", "test")
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 abstract class AbstractFunctionalTest {
 
@@ -38,10 +38,10 @@ abstract class AbstractFunctionalTest {
     private fun reset() {
         RestAssured.reset()
         RestAssured.port = appPort!!
-        RestAssured.requestSpecification = RequestSpecBuilder()
-                .setContentType("application/json")
-                .setAccept("application/json")
-                .build()
+//        RestAssured.requestSpecification = RequestSpecBuilder()
+//                .setContentType("application/json")
+//                .setAccept("application/json")
+//                .build()
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()
     }
 
