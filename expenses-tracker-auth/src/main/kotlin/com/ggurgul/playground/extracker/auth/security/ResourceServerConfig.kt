@@ -26,10 +26,13 @@ class ResourceServerConfig : ResourceServerConfigurerAdapter() {
 
     /**
      * Resources exposed via oauth. As we are providing also local user interface they are also accessible from within.
+     * Note that this security filter chain has to be bypassed in case the request is not intended to be OAuth related.
+     * This is done by BearerAuthorizationHeaderMatcher which matches only on Authorization Bearer tokens.
+     * This will enable the client to access same paths by local login mechanisms (session-based) and oauth simultaneously.
      */
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
-        http.requestMatcher(BearerAuthorizationHeaderMatcher()) // use only for requests which want to authenticate with Bearer token
+        http.requestMatcher(BearerAuthorizationHeaderMatcher())
                 .authorizeRequests()
                 .anyRequest()
                 .authenticated()
