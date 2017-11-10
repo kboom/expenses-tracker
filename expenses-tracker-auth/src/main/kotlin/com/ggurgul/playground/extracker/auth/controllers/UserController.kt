@@ -20,6 +20,7 @@ import javax.websocket.server.PathParam
 
 
 @RestController
+@RequestMapping("/api/users")
 @ExposesResourceFor(User::class)
 class UserController {
 
@@ -35,7 +36,7 @@ class UserController {
     /**
      * This endpoint gets called whenever the user authenticates on a page having no redirect back link.
      */
-    @RequestMapping(path = arrayOf("/me", "/users/me"), produces = arrayOf(MediaType.ALL_VALUE))
+    @RequestMapping(path = arrayOf("/me"), produces = arrayOf(MediaType.ALL_VALUE))
     fun user(principal: Principal) = resourceFactory.toUserResource(when (principal) {
         is OAuth2Authentication -> principal.userAuthentication.principal
         is UsernamePasswordAuthenticationToken -> principal.principal

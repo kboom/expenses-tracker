@@ -30,9 +30,13 @@ abstract class AbstractFunctionalTest {
     @LocalServerPort
     private var appPort: Int? = null
 
+    @Autowired
+    private lateinit var userManager: UsersManager
+
     @Before
     fun before() {
         reset()
+        userManager.resetAll()
     }
 
     private fun reset() {

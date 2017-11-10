@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
 import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.core.Authentication
@@ -31,12 +32,16 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher
+import org.springframework.security.web.util.matcher.OrRequestMatcher
+import org.springframework.security.web.util.matcher.RequestMatcher
 import org.springframework.web.filter.CompositeFilter
 import java.util.*
 import javax.servlet.Filter
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+// todo try this https://stackoverflow.com/questions/28908946/spring-security-oauth2-and-form-login-configuration
 @Configuration
 @EnableOAuth2Client
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
@@ -59,14 +64,12 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder())
     }
 
-    // new SavedRequestAwareAuthenticationSuccessHandler()
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
-        http.antMatcher("/**")
+        http
                 .formLogin()
-                .loginProcessingUrl("/api/login") // not necessarily needed
+                .loginProcessingUrl("/api/login")
                 .failureHandler(localAuthenticationFailureHandler())
-//                .httpBasic()
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET,
@@ -80,7 +83,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                         HttpMethod.POST,
                         "/api/login**",
                         "/api/registration**",
-                        "/auth/account/password/reset*/**"
+                        "/api/user/password/reset*/**"
                 ).permitAll()
                 .anyRequest()
                 .authenticated()
@@ -88,8 +91,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 .exceptionHandling()
                 .authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/login"))
                 .and().logout().logoutSuccessUrl("/").permitAll().and()
-                // .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .csrf().disable() // todo consider how to enable this only for parts of the service which is exposed to the web browser
+                .csrf().disable()
                 .addFilterBefore(createClientFilter(), BasicAuthenticationFilter::class.java)
     }
 

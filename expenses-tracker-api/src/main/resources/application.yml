@@ -3,13 +3,12 @@ server:
 
 zuul:
   ignoredServices: '*'
-  prefix: /api
   routes:
     expenses-tracker-auth:
-      path: /auth/**
+      path: /api/auth/**
       sensitive-headers:
     expenses-tracker-service:
-      path: /expenses/**
+      path: /api/expenses/**
       sensitive-headers:
   add-proxy-headers: true
 

@@ -19,6 +19,10 @@ import org.springframework.web.filter.CorsFilter
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
+import org.springframework.cloud.netflix.zuul.filters.pre.PreDecorationFilter
+import com.netflix.zuul.ZuulFilter
+import com.netflix.zuul.context.RequestContext
+import org.springframework.stereotype.Component
 
 
 @SpringBootApplication
@@ -78,6 +82,35 @@ class App : WebSecurityConfigurerAdapter() {
 //                registry.addResourceHandler("/**")
 //                        .addResourceLocations(*CLASSPATH_RESOURCE_LOCATIONS)
 //            }
+        }
+
+    }
+
+    @Component
+    class CustomPathZuulFilter : ZuulFilter() {
+
+        companion object {
+            val REQUEST_URI_KEY = "requestURI"
+        }
+
+        override fun filterType(): String {
+            return "pre"
+        }
+
+        override fun filterOrder(): Int {
+            return PreDecorationFilter.FILTER_ORDER + 1
+        }
+
+        override fun shouldFilter(): Boolean {
+            return true
+        }
+
+        override fun run(): Any? {
+            val context = RequestContext.getCurrentContext()
+            val originalRequestPath = context.get(REQUEST_URI_KEY)
+            val modifiedRequestPath = "/api/" + originalRequestPath
+            context.put(REQUEST_URI_KEY, modifiedRequestPath)
+            return null
         }
 
     }

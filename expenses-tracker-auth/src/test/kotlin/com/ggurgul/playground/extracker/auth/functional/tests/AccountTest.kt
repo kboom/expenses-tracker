@@ -32,15 +32,13 @@ class AccountTest : AbstractFunctionalTest() {
 
     @Test
     fun userCanGetProfileLocalLogin() {
+        val dummyUser = userManager.createDummyUser()
         RestAssured.given()
-                .auth().form("admin", "Secret123!", FormAuthConfig("api/login", "username", "password").withLoggingEnabled())
+                .auth().form(dummyUser.email, "secret", FormAuthConfig("api/login", "username", "password").withLoggingEnabled())
                 .get("/api/users/me")
                 .then()
                 .statusCode(200)
-                .body("username", Matchers.equalTo("alice"))
-                .body("email", Matchers.equalTo("alice@test.com"))
-                .body("firstName", Matchers.equalTo("Alice"))
-                .body("lastName", Matchers.equalTo("Smith"))
+                .body("username", Matchers.equalTo("someone@anyone.com"))
     }
 
 }

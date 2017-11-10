@@ -29,8 +29,8 @@ class UsersManager {
     ))!!
 
     fun resetAll() {
-        authorityRepository.deleteAll()
         userRepository.deleteAll()
+        authorityRepository.deleteAll()
         authorityRepository.save(Authority(AuthorityName.ROLE_USER))
     }
 
